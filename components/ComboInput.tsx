@@ -1,0 +1,78 @@
+"use client";
+
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+interface ComboInputProps {
+  options: Option[];
+  placeholder?: string;
+}
+
+const ComboInput = ({ options, placeholder }: ComboInputProps) => {
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState("")
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between border-border hover:bg-primary-foreground"
+        >
+          {value
+            ? options.find((_option) => _option.value === value)?.label
+            : `Select ${placeholder?.toLowerCase() || "option"}...`}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command className="dark">
+          <CommandInput placeholder={`Search ${placeholder?.toLowerCase() || "option"}...`} />
+          <CommandList>
+            <CommandEmpty>No {placeholder || "option"} found.</CommandEmpty>
+            <CommandGroup>
+              {options.map((_option) => (
+                <CommandItem
+                  key={_option.label}
+                  value={_option.label}
+                  onSelect={(_current) => {
+                    setValue(_option.value === value ? "" : _option.value)
+                    setOpen(false)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4 stroke-primary",
+                      value === _option.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {_option.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+export default ComboInput;

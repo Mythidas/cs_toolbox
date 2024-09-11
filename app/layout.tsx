@@ -10,10 +10,10 @@ const ibmPlexSerif = IBM_Plex_Serif({
 })
 
 export const metadata: Metadata = {
-  title: "CSIT Toolbox",
+  title: "CS Toolbox",
   description: "A collection of tools for CSIT techs",
   icons: {
-    icon: "/icons/favicon.png",
+    icon: "/icons/toolbox.png",
   }
 };
 
@@ -24,7 +24,7 @@ export default function GlobalLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${ibmPlexSerif.variable}`}>
+      <body className={`${inter.variable} ${ibmPlexSerif.variable} w-screen h-screen`}>
         {children}
       </body>
     </html>

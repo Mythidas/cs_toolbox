@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/Navbar";
 import React from "react";
 
 interface RootLayoutProps {
@@ -7,9 +7,9 @@ interface RootLayoutProps {
 
 const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
   return (
-    <main className="flex w-screen h-screen overflow-y-clip">
-      <Sidebar />
-      <div>
+    <main className="flex flex-col overflow-y-clip">
+      <Navbar />
+      <div className="flex size-full">
         {children}
       </div>
     </main>
