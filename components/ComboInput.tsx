@@ -25,8 +25,10 @@ interface ComboInputProps {
 }
 
 const ComboInput = ({ options, placeholder }: ComboInputProps) => {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const COMBO_WIDTH = 260;
+
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -35,7 +37,7 @@ const ComboInput = ({ options, placeholder }: ComboInputProps) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between border-border hover:bg-primary-foreground"
+          className={`w-[${COMBO_WIDTH}px] justify-between border-none bg-accent hover:bg-accent-foreground hover:text-muted`}
         >
           {value
             ? options.find((_option) => _option.value === value)?.label
@@ -43,8 +45,8 @@ const ComboInput = ({ options, placeholder }: ComboInputProps) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command className="dark">
+      <PopoverContent className={`w-[${COMBO_WIDTH}px] p-0`}>
+        <Command>
           <CommandInput placeholder={`Search ${placeholder?.toLowerCase() || "option"}...`} />
           <CommandList>
             <CommandEmpty>No {placeholder || "option"} found.</CommandEmpty>

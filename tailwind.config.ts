@@ -60,6 +60,16 @@ const config: Config = {
 				inter: "var(--font-inter)",
 				"ibm-plex-serif": "var(--font-ibm-plex-serif)",
 			},
+			padding: {
+				sm: "var(--padding-sm)",
+				md: "var(--padding-md)",
+				lg: "var(--padding-lg)",
+			},
+			gap: {
+				sm: "var(--gap-sm)",
+				md: "var(--gap-md)",
+				lg: "var(--gap-lg)",
+			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

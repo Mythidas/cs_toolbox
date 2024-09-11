@@ -1,7 +1,14 @@
+import { Ticket } from "lucide-react";
+
 export const NAV_LINKS = [
   {
     route: "/",
+    title: "Dashboard",
+    icon: "/icons/chart.svg",
+  },
+  {
+    route: "/tickets",
     title: "Tickets",
-    icon: "home"
-  }
+    icon: "/icons/ticket.svg",
+  },
 ]

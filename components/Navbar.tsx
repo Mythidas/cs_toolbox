@@ -1,38 +1,28 @@
-"use client";
+"use server";
 
 import React from "react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 import ComboInput from "@/components/ComboInput";
-import { NAV_LINKS } from "@/constants";
 import Image from "next/image";
+import Navmenu from "./Navmenu";
+import Link from "next/link";
+import { getSites } from "@/lib/actions/site.action";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const sites = await getSites();
+
   return (
     <NavigationMenu className="flex max-w-full w-full justify-between p-2 border-b-[1px]">
-      <Image src="/icons/toolbox.png" alt="toolbox logo" width={36} height={36} />
-      <NavigationMenuList className="flex w-full gap-2">
-        {NAV_LINKS.map((_link) => {
-          return (
-            <Link href={_link.route} legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                {_link.title}
-              </NavigationMenuLink>
-            </Link>
-          )
-        })}
-      </NavigationMenuList>
+      <div className="flex gap-sm">
+        <Link href="/" className="px-sm">
+          <Image src="/icons/toolbox.png" alt="toolbox logo" width={36} height={36} />
+        </Link>
+        <Navmenu />
+      </div>
       <div>
-        <ComboInput options={[{ label: "Aaxia", value: "1" }, { label: "Woodlands", value: "2" }, { label: "World Of Smiles", value: "3" }]} placeholder="site" />
+        <ComboInput options={sites.map((_site: Site) => { return { label: _site.name, value: _site.vsaId.toString() } })} placeholder="site" />
       </div>
     </NavigationMenu>
   )
