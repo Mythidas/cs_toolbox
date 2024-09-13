@@ -11,7 +11,7 @@ import Link from "next/link";
 import { getSites } from "@/lib/actions/site.action";
 
 const Navbar = async () => {
-  const sites = await getSites();
+  //const sites = await getSites();
 
   return (
     <NavigationMenu className="flex max-w-full w-full justify-between p-2 border-b-[1px]">
@@ -21,9 +21,9 @@ const Navbar = async () => {
         </Link>
         <Navmenu />
       </div>
-      <div>
+      {/* <div>
         <ComboInput options={sites.map((_site: Site) => { return { label: _site.name, value: _site.vsaId.toString() } })} placeholder="site" />
-      </div>
+      </div> */}
     </NavigationMenu>
   )
 }

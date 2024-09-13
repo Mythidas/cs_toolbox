@@ -1,28 +1,17 @@
+import { BaseClient } from "./utils";
+
 const {
   NEXT_PUBLIC_VSAX_URL,
   VSAX_USER_ID,
   VSAX_SECRET,
 } = process.env;
 
-interface VSAXSite {
-  Id: number;
-  Name: string;
-  ParentId: number;
-  ParentName: string;
-  PsaMappingId: number;
-  PsaIntegrationType: string;
-  HasCustomFields: boolean;
-}
-
-interface VSAXCustomField {
-  Id: number;
-  Name: string;
-  Value: string;
-  Type: string;
-}
-
-class VSAXClient {
+class VSAXClient extends BaseClient {
   private readonly BEARER_TOKEN = btoa(`${VSAX_USER_ID}:${VSAX_SECRET}`);
+
+  constructor() {
+    super("VSAX");
+  }
 
   async getSites() {
     let siteList: Site[] = [];
@@ -65,10 +54,23 @@ class VSAXClient {
       return [];
     }
   }
+}
 
-  private _throw(error: any) {
-    throw new Error(`[VSAX] ${error}`);
-  }
+interface VSAXSite {
+  Id: number;
+  Name: string;
+  ParentId: number;
+  ParentName: string;
+  PsaMappingId: number;
+  PsaIntegrationType: string;
+  HasCustomFields: boolean;
+}
+
+interface VSAXCustomField {
+  Id: number;
+  Name: string;
+  Value: string;
+  Type: string;
 }
 
 export { VSAXClient };

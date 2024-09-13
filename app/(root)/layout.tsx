@@ -7,9 +7,9 @@ interface RootLayoutProps {
 
 const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
   return (
-    <main className="flex flex-col overflow-y-clip">
+    <main className="flex flex-col size-full">
       <Navbar />
-      <div className="flex size-full p-sm">
+      <div className="flex size-full p-sm overflow-clip">
         {children}
       </div>
     </main>

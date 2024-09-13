@@ -22,9 +22,10 @@ import {
 interface ComboInputProps {
   options: Option[];
   placeholder?: string;
+  onChange?: (option: Option) => void;
 }
 
-const ComboInput = ({ options, placeholder }: ComboInputProps) => {
+const ComboInput = ({ options, placeholder, onChange }: ComboInputProps) => {
   const COMBO_WIDTH = 260;
 
   const [open, setOpen] = React.useState(false);
@@ -56,8 +57,9 @@ const ComboInput = ({ options, placeholder }: ComboInputProps) => {
                   key={_option.label}
                   value={_option.label}
                   onSelect={(_current) => {
-                    setValue(_option.value === value ? "" : _option.value)
-                    setOpen(false)
+                    setValue(_option.value === value ? "" : _option.value);
+                    setOpen(false);
+                    onChange?.(_option);
                   }}
                 >
                   <Check
