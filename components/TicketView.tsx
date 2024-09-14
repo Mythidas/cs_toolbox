@@ -11,10 +11,17 @@ import ComboInput from "./ComboInput";
 interface TicketViewProps {
   tickets: AutoTaskTicket[];
   companies: AutoTaskCompany[];
+  queues: AutoTaskFieldValue[];
 }
 
-const TicketView = ({ tickets, companies }: TicketViewProps) => {
+const TicketView = ({ tickets, companies, queues }: TicketViewProps) => {
   const columns: ColumnDef<AutoTaskTicket>[] = [
+    {
+      accessorKey: "ticketNumber",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ticket Number" />
+      ),
+    },
     {
       accessorKey: "title",
       header: ({ column }) => (
@@ -45,6 +52,30 @@ const TicketView = ({ tickets, companies }: TicketViewProps) => {
         return rows.original.companyID === value;
       }
     },
+    {
+      accessorKey: "queueID",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Queue" />
+      ),
+      cell: ({ row }) => {
+        return (
+          <div>
+            {queues.find((queue) => Number(queue.value) === row.original.queueID)?.label}
+          </div>
+        )
+      },
+      sortingFn: (a, b) => {
+        const queueA = queues.find((queue) => Number(queue.value) === a.original.queueID);
+        const queueB = queues.find((queue) => Number(queue.value) === b.original.queueID);
+        if (queueA && queueB) {
+          return queueA.label.localeCompare(queueB.label);
+        }
+        return 0;
+      },
+      filterFn: (rows, id, value) => {
+        return rows.original.queueID === value;
+      }
+    }
   ];
 
   const TicketViewFilters = (table: Table<AutoTaskTicket>) => {
@@ -71,6 +102,24 @@ const TicketView = ({ tickets, companies }: TicketViewProps) => {
               }
 
               table.getColumn("companyID")?.setFilterValue(Number(selectedOption.value));
+            }}
+            placeholder="Company"
+          />
+        </div>
+        <div>
+          <ComboInput
+            options={queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
+              value: _queue.value,
+              label: `${_queue.label} (${tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
+            }))}
+            onChange={(selectedOption) => {
+              if (Number(selectedOption.value) === table.getColumn("queueID")?.getFilterValue()) {
+                table.getColumn("queueID")?.setFilterValue(undefined);
+                return;
+              }
+
+              table.getColumn("queueID")?.setFilterValue(Number(selectedOption.value));
+              console.log(selectedOption.value);
             }}
             placeholder="Company"
           />

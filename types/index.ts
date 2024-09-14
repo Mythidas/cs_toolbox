@@ -161,3 +161,28 @@ type AutoTaskCompany = {
     value: string;
   }[];
 };
+
+type AutoTaskFieldInfo = {
+  name: string;
+  dataType: string;
+  length: number;
+  isRequired: boolean;
+  isReadOnly: boolean;
+  isQueryable: boolean;
+  isReference: boolean;
+  referenceEntityType: string;
+  isPickList: boolean;
+  picklistValues: AutoTaskFieldValue[];
+  picklistParentValueField: string;
+  isSupportedWebhookField: boolean;
+}
+
+type AutoTaskFieldValue = {
+  value: string;
+  label: string;
+  isDefaultValue: boolean;
+  sortOrder: number;
+  parentValue: string;
+  isActive: boolean;
+  isSystem: boolean;
+}

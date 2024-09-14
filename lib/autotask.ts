@@ -12,6 +12,9 @@ export class AutoTaskClient extends BaseClient {
     super("AutoTask");
   }
 
+  // =============== Tickets ===============
+
+  // TODO: Make the queues a parameter
   async getOpenTickets() {
     try {
       const completeStatusID = await this.getTicketFieldValue("status", "Complete");
@@ -19,7 +22,23 @@ export class AutoTaskClient extends BaseClient {
         this._throw("Complete status not found");
       }
 
-      const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query?search={"Filter":[{"field":"status","op":"noteq","value":${completeStatusID}}]}`, {
+      const supportQueueID = await this.getTicketFieldValue("queueID", "Support");
+      if (!supportQueueID) {
+        this._throw("Support queue not found");
+      }
+
+      const triageQueueID = await this.getTicketFieldValue("queueID", "Triage");
+      if (!triageQueueID) {
+        this._throw("Triage queue not found");
+      }
+
+      const apiFilter = JSON.stringify({
+        Filter: [
+          { field: "status", op: "noteq", value: Number(completeStatusID) },
+        ]
+      });
+
+      const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query?search=${apiFilter}`, {
         method: "GET",
         headers: {
           "APIIntegrationcode": AUTOTASK_TRACKER!,
@@ -42,9 +61,32 @@ export class AutoTaskClient extends BaseClient {
     }
   }
 
+  async getTicketQueues() {
+    try {
+      const queueLabels = await this.getTicketFieldLabels("queueID");
+      if (!queueLabels) {
+        this._throw("Queue labels not found");
+      }
+
+      return queueLabels;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  // =============== Companies ===============
+
   async getActiveCompanies() {
     try {
-      const companyFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/query?search={"Filter":[{"field":"isActive","op":"eq","value":"true"},{"field":"companyType","op":"eq","value":1}]}`, {
+      const apiFilter = JSON.stringify({
+        Filter: [
+          { field: "isActive", op: "eq", value: "true" },
+          { field: "companyType", op: "eq", value: 1 }
+        ]
+      });
+
+      const companyFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/query?search=${apiFilter}`, {
         method: "GET",
         headers: {
           "APIIntegrationcode": AUTOTASK_TRACKER!,
@@ -59,15 +101,16 @@ export class AutoTaskClient extends BaseClient {
       }
 
       const companyData = await companyFetch.json();
-
-      return companyData.items;
+      return companyData.items as AutoTaskCompany[];
     } catch (error) {
       console.error(error);
       return [];
     }
   }
 
-  private async getTicketFieldValue(field: string, label: string) {
+  // =============== Helpers ===============
+
+  private async getTicketFieldValue(field: keyof AutoTaskTicket, label: string) {
     try {
       const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
         method: "GET",
@@ -94,7 +137,59 @@ export class AutoTaskClient extends BaseClient {
     }
   }
 
-  async getCompanyFieldValue(field: string, label: string) {
+  private async getTicketFieldValues(field: keyof AutoTaskTicket, label: string) {
+    try {
+      const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
+        method: "GET",
+        headers: {
+          "APIIntegrationcode": AUTOTASK_TRACKER!,
+          "UserName": AUTOTASK_USER_ID!,
+          "Secret": AUTOTASK_SECRET!,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!ticketInfoFetch.ok) {
+        this._throw(ticketInfoFetch.statusText);
+      }
+
+      const ticketInfoData = await ticketInfoFetch.json() as { fields: AutoTaskFieldInfo[] };
+
+      const fieldInfo = ticketInfoData.fields.find(fieldInfo => fieldInfo.name === field);
+      return fieldInfo?.picklistValues;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  private async getTicketFieldLabels(field: keyof AutoTaskTicket) {
+    try {
+      const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
+        method: "GET",
+        headers: {
+          "APIIntegrationcode": AUTOTASK_TRACKER!,
+          "UserName": AUTOTASK_USER_ID!,
+          "Secret": AUTOTASK_SECRET!,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!ticketInfoFetch.ok) {
+        this._throw(ticketInfoFetch.statusText);
+      }
+
+      const ticketInfoData = await ticketInfoFetch.json() as { fields: AutoTaskFieldInfo[] };
+      const fieldInfo = ticketInfoData.fields.find(fieldInfo => fieldInfo.name === field);
+      const fieldLabels = fieldInfo?.picklistValues.filter(value => value.isActive) || [];
+      return fieldLabels;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  private async getCompanyFieldValue(field: string, label: string) {
     try {
       const companyInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/entityInformation/fields`, {
         method: "GET",
@@ -122,27 +217,8 @@ export class AutoTaskClient extends BaseClient {
   }
 }
 
-interface AutoTaskFieldInfo {
-  name: string;
-  dataType: string;
-  length: number;
-  isRequired: boolean;
-  isReadOnly: boolean;
-  isQueryable: boolean;
-  isReference: boolean;
-  referenceEntityType: string;
-  isPickList: boolean;
-  picklistValues: AutoTaskFieldValue[];
-  picklistParentValueField: string;
-  isSupportedWebhookField: boolean;
-}
-
-interface AutoTaskFieldValue {
-  value: string;
-  label: string;
-  isDefaultValue: boolean;
-  sortOrder: number;
-  parentValue: string;
-  isActive: boolean;
-  isSystem: boolean;
+interface AutoTaskAPIFilter {
+  field: string;
+  op: "eq" | "noteq" | "gt" | "gte" | "lt" | "lte" | "beginsWith" | "endsWith" | "contains" | "exist" | "notExist" | "in" | "notIn";
+  value: string | number;
 }
