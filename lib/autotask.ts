@@ -22,23 +22,13 @@ export class AutoTaskClient extends BaseClient {
         this._throw("Complete status not found");
       }
 
-      const supportQueueID = await this.getTicketFieldValue("queueID", "Support");
-      if (!supportQueueID) {
-        this._throw("Support queue not found");
-      }
-
-      const triageQueueID = await this.getTicketFieldValue("queueID", "Triage");
-      if (!triageQueueID) {
-        this._throw("Triage queue not found");
-      }
-
-      const apiFilter = JSON.stringify({
+      const apiFilter: AutoTaskAPIFilter<AutoTaskTicket> = {
         Filter: [
           { field: "status", op: "noteq", value: Number(completeStatusID) },
         ]
-      });
+      };
 
-      const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query?search=${apiFilter}`, {
+      const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query?search=${JSON.stringify(apiFilter)}`, {
         method: "GET",
         headers: {
           "APIIntegrationcode": AUTOTASK_TRACKER!,
@@ -63,7 +53,7 @@ export class AutoTaskClient extends BaseClient {
 
   async getTicketQueues() {
     try {
-      const queueLabels = await this.getTicketFieldLabels("queueID");
+      const queueLabels = await this.getTicketFields("queueID");
       if (!queueLabels) {
         this._throw("Queue labels not found");
       }
@@ -75,18 +65,78 @@ export class AutoTaskClient extends BaseClient {
     }
   }
 
+  async getTicketStatuses() {
+    try {
+      const statusLabels = await this.getTicketFields("status");
+      if (!statusLabels) {
+        this._throw("Status labels not found");
+      }
+
+      return statusLabels;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async getTicketPriorities() {
+    try {
+      const priorityLabels = await this.getTicketFields("priority");
+      if (!priorityLabels) {
+        this._throw("Priority labels not found");
+      }
+
+      return priorityLabels;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async getResources() {
+    try {
+      const apiFilter: AutoTaskAPIFilter<AutoTaskResource> = {
+        Filter: [
+          { field: "isActive", op: "eq", value: "true" },
+          { field: "licenseType", op: "in", value: [1, 3] } // 1 = Full, 3 = Limited, 7 = API User
+        ]
+      };
+
+      const resourceFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Resources/query?search=${JSON.stringify(apiFilter)}`, {
+        method: "GET",
+        headers: {
+          "APIIntegrationcode": AUTOTASK_TRACKER!,
+          "UserName": AUTOTASK_USER_ID!,
+          "Secret": AUTOTASK_SECRET!,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!resourceFetch.ok) {
+        this._throw(resourceFetch.statusText);
+      }
+
+
+      const resourceData = await resourceFetch.json();
+      return resourceData.items as AutoTaskResource[];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
   // =============== Companies ===============
 
   async getActiveCompanies() {
     try {
-      const apiFilter = JSON.stringify({
+      const apiFilter: AutoTaskAPIFilter<AutoTaskCompany> = {
         Filter: [
           { field: "isActive", op: "eq", value: "true" },
-          { field: "companyType", op: "eq", value: 1 }
+          { field: "companyType", op: "eq", value: "1" }
         ]
-      });
+      };
 
-      const companyFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/query?search=${apiFilter}`, {
+      const companyFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/query?search=${JSON.stringify(apiFilter)}`, {
         method: "GET",
         headers: {
           "APIIntegrationcode": AUTOTASK_TRACKER!,
@@ -163,7 +213,7 @@ export class AutoTaskClient extends BaseClient {
     }
   }
 
-  private async getTicketFieldLabels(field: keyof AutoTaskTicket) {
+  private async getTicketFields(field: keyof AutoTaskTicket) {
     try {
       const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
         method: "GET",
@@ -181,8 +231,8 @@ export class AutoTaskClient extends BaseClient {
 
       const ticketInfoData = await ticketInfoFetch.json() as { fields: AutoTaskFieldInfo[] };
       const fieldInfo = ticketInfoData.fields.find(fieldInfo => fieldInfo.name === field);
-      const fieldLabels = fieldInfo?.picklistValues.filter(value => value.isActive) || [];
-      return fieldLabels;
+      const fields = fieldInfo?.picklistValues.filter(value => value.isActive) || [];
+      return fields;
     } catch (error) {
       console.error(error);
       return [];
@@ -217,8 +267,10 @@ export class AutoTaskClient extends BaseClient {
   }
 }
 
-interface AutoTaskAPIFilter {
-  field: string;
-  op: "eq" | "noteq" | "gt" | "gte" | "lt" | "lte" | "beginsWith" | "endsWith" | "contains" | "exist" | "notExist" | "in" | "notIn";
-  value: string | number;
+interface AutoTaskAPIFilter<T> {
+  Filter: {
+    field: keyof T;
+    op: "eq" | "noteq" | "gt" | "gte" | "lt" | "lte" | "beginsWith" | "endsWith" | "contains" | "exist" | "notExist" | "in" | "notIn";
+    value: string | number | string[] | number[];
+  }[]
 }

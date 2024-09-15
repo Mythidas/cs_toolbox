@@ -29,12 +29,14 @@ import { DataTablePagination } from "./DataTablePagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  paginateTag?: string;
   renderFilter?: (table: TableType<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  paginateTag,
   renderFilter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -55,11 +57,6 @@ export function DataTable<TData, TValue>({
     }
   });
 
-  // Set default page size
-  React.useEffect(() => {
-    table.getState().pagination.pageSize = 20;
-  }, [])
-
   return (
     <div className="flex flex-col h-full justify-between gap-sm">
       <div>
@@ -68,7 +65,7 @@ export function DataTable<TData, TValue>({
             {renderFilter(table)}
           </div>
         )}
-        <div className="flex relative max-h-[80vh] h-fit rounded-md border overflow-y-auto">
+        <div className="flex relative max-h-[80vh] h-fit rounded-md border overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 bg-card">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -113,7 +110,9 @@ export function DataTable<TData, TValue>({
           </Table>
         </div>
       </div>
-      <DataTablePagination table={table} />
+      <div className="border-t-[1px] border-border pt-sm">
+        <DataTablePagination table={table} tag={paginateTag} />
+      </div>
     </div>
   )
 }

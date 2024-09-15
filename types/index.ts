@@ -162,6 +162,45 @@ type AutoTaskCompany = {
   }[];
 };
 
+type AutoTaskResource = {
+  id: number;
+  accountingReferenceID: string;
+  dateFormat: string;
+  defaultServiceDeskRoleID: number | null;
+  email: string;
+  email2: string;
+  email3: string;
+  emailTypeCode: string;
+  emailTypeCode2: string | null;
+  emailTypeCode3: string | null;
+  firstName: string;
+  gender: string | null;
+  greeting: string | null;
+  hireDate: string;
+  homePhone: string;
+  initials: string;
+  internalCost: number;
+  isActive: boolean;
+  lastName: string;
+  licenseType: number;
+  locationID: number;
+  middleName: string;
+  mobilePhone: string;
+  numberFormat: string;
+  officeExtension: string;
+  officePhone: string;
+  payrollIdentifier: string;
+  payrollType: number;
+  resourceType: string;
+  suffix: string | null;
+  surveyResourceRating: number | null;
+  timeFormat: string;
+  title: string;
+  travelAvailabilityPct: number | null;
+  userName: string;
+  userType: number;
+}
+
 type AutoTaskFieldInfo = {
   name: string;
   dataType: string;
