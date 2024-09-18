@@ -53,9 +53,8 @@ const TicketView = ({ view }: { view: TicketViewProps }) => {
       ),
       cell: ({ row }) => {
         return (
-          <a href={`${AUTOTASK_COMPANY_URL}${row.original.companyID}`} target="_blank" rel="noreferrer" className="flex min-w-32 line-clamp-2 space-x-1 text-primary hover:text-primary-foreground">
+          <a href={`${AUTOTASK_COMPANY_URL}${row.original.companyID}`} target="_blank" rel="noreferrer" className="min-w-32 line-clamp-2 text-primary hover:text-primary-foreground">
             <p>{view.companies.find((company) => company.id === row.original.companyID)?.companyName}</p>
-            <Link size="0.8em" className="my-auto" />
           </a>
         )
       },

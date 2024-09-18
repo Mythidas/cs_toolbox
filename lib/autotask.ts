@@ -2,9 +2,9 @@ import { BaseClient } from "./utils";
 
 const {
   NEXT_PUBLIC_AUTOTASK_URL,
-  AUTOTASK_USER_ID,
-  AUTOTASK_SECRET,
-  AUTOTASK_TRACKER
+  NEXT_PUBLIC_AUTOTASK_TRACKER,
+  NEXT_AUTOTASK_USER_ID,
+  NEXT_AUTOTASK_SECRET,
 } = process.env;
 
 export class AutoTaskClient extends BaseClient {
@@ -31,11 +31,12 @@ export class AutoTaskClient extends BaseClient {
       const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query?search=${JSON.stringify(apiFilter)}`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
-        }
+        },
+        cache: "no-cache"
       });
 
       if (!ticketFetch.ok) {
@@ -105,9 +106,9 @@ export class AutoTaskClient extends BaseClient {
       const resourceFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Resources/query?search=${JSON.stringify(apiFilter)}`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
         }
       });
@@ -139,9 +140,9 @@ export class AutoTaskClient extends BaseClient {
       const companyFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/query?search=${JSON.stringify(apiFilter)}`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
         }
       });
@@ -165,9 +166,9 @@ export class AutoTaskClient extends BaseClient {
       const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
         }
       });
@@ -192,9 +193,9 @@ export class AutoTaskClient extends BaseClient {
       const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
         }
       });
@@ -218,9 +219,9 @@ export class AutoTaskClient extends BaseClient {
       const ticketInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/entityInformation/fields`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
         }
       });
@@ -244,9 +245,9 @@ export class AutoTaskClient extends BaseClient {
       const companyInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/entityInformation/fields`, {
         method: "GET",
         headers: {
-          "APIIntegrationcode": AUTOTASK_TRACKER!,
-          "UserName": AUTOTASK_USER_ID!,
-          "Secret": AUTOTASK_SECRET!,
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
           "Content-Type": "application/json"
         }
       });

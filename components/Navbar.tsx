@@ -4,13 +4,15 @@ import React from "react";
 import {
   NavigationMenu,
 } from "@/components/ui/navigation-menu";
-import ComboInput from "@/components/ComboInput";
 import Image from "next/image";
 import Navmenu from "./Navmenu";
 import Link from "next/link";
-import { getSites } from "@/lib/actions/site.action";
 
-const Navbar = async () => {
+interface NavbarProps {
+  loggedInUser: any;
+}
+
+const Navbar = async ({ loggedInUser }: NavbarProps) => {
   //const sites = await getSites();
 
   return (
@@ -21,9 +23,11 @@ const Navbar = async () => {
         </Link>
         <Navmenu />
       </div>
-      {/* <div>
-        <ComboInput options={sites.map((_site: Site) => { return { label: _site.name, value: _site.vsaId.toString() } })} placeholder="site" />
-      </div> */}
+      <div>
+        <h1 className="font-semibold text-primary">
+          {loggedInUser.name}
+        </h1>
+      </div>
     </NavigationMenu>
   )
 }

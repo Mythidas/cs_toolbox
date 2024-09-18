@@ -1,4 +1,6 @@
 import Navbar from "@/components/Navbar";
+import { getLoggedInUser } from "@/lib/actions/user.action";
+import { redirect } from "next/navigation";
 import React from "react";
 
 interface RootLayoutProps {
@@ -6,9 +8,12 @@ interface RootLayoutProps {
 }
 
 const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
+  const loggedInUser = await getLoggedInUser();
+  if (!loggedInUser) redirect("/sign-in");
+
   return (
     <main className="flex flex-col size-full">
-      <Navbar />
+      <Navbar loggedInUser={loggedInUser} />
       <div className="flex size-full p-sm overflow-clip">
         {children}
       </div>

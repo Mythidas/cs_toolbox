@@ -2,12 +2,12 @@ import { BaseClient } from "./utils";
 
 const {
   NEXT_PUBLIC_VSAX_URL,
-  VSAX_USER_ID,
-  VSAX_SECRET,
+  NEXT_VSAX_USER_ID,
+  NEXT_VSAX_SECRET,
 } = process.env;
 
 class VSAXClient extends BaseClient {
-  private readonly BEARER_TOKEN = btoa(`${VSAX_USER_ID}:${VSAX_SECRET}`);
+  private readonly BEARER_TOKEN = btoa(`${NEXT_VSAX_USER_ID}:${NEXT_VSAX_SECRET}`);
 
   constructor() {
     super("VSAX");
