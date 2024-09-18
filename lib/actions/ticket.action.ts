@@ -1,17 +1,29 @@
 // =============== Get Tickets ===============
 
 import { AutoTaskClient } from "../autotask";
+import { Timer } from "../utils";
 
-export async function getTickets() {
+export async function getTickets(params: AutoTaskTicketFetchParams) {
   try {
     const autotaskClient = new AutoTaskClient();
-    const tickets = await autotaskClient.getOpenTickets();
+    const timer = new Timer();
+
+    const tickets = await autotaskClient.getTickets(params);
+    autotaskClient._log(`Tickets: ${tickets.length} [${timer.elapsedSeconds}s]`);
+    timer.reset();
+
     const companies = await autotaskClient.getActiveCompanies();
-    const queues = await autotaskClient.getTicketQueues();
-    const statuses = await autotaskClient.getTicketStatuses();
-    const priorities = await autotaskClient.getTicketPriorities();
+    autotaskClient._log(`Companies: ${companies.length} [${timer.elapsedSeconds}s]`);
+    timer.reset();
+
+    const filterFields = await autotaskClient.getTicketFilterFields();
+    autotaskClient._log(`Queues: ${filterFields.queues.length}, Statuses: ${filterFields.statuses.length}, Priorities: ${filterFields.priorities.length} [${timer.elapsedSeconds}s]`);
+    timer.reset();
+
     const resources = [...(await autotaskClient.getResources()), { id: 0, firstName: "Unassigned", lastName: "" }] as AutoTaskResource[];
-    return { tickets, companies, queues, statuses, priorities, resources };
+    autotaskClient._log(`Resources: ${resources.length} [${timer.elapsedSeconds}s]`);
+
+    return { tickets, companies, ...filterFields, resources };
   } catch (error) {
     console.error(error);
     return { tickets: [], companies: [], queues: [], statuses: [], priorities: [], resources: [] };

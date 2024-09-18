@@ -225,3 +225,14 @@ type AutoTaskFieldValue = {
   isActive: boolean;
   isSystem: boolean;
 }
+
+type AutoTaskTicketFetchParams = {
+  completed: boolean;
+  ticketNumber?: string;
+  title?: string;
+  companyID?: number[];
+  queueID?: number[];
+  assignedResourceID?: number[];
+  status?: number[];
+  priority?: number[];
+}
