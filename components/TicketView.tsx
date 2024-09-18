@@ -14,8 +14,6 @@ const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: st
     priority: searchParams?.priority ? (Array.isArray(searchParams.priority) ? searchParams.priority.map((_val) => Number(_val)) : [Number(searchParams.priority)]) : undefined,
   };
 
-  console.log(ticketFetchParams);
-
   const ticketInfo = await getTickets(ticketFetchParams);
 
   return (

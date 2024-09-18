@@ -12,4 +12,5 @@ export const NAV_LINKS = [
 ];
 
 export const AUTOTASK_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/TicketDetail.mvc?workspace=False&ticketId=";
+export const AUTOTASK_NEW_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/TicketNew.mvc/Create?categoryId=3";
 export const AUTOTASK_COMPANY_URL = "https://ww15.autotask.net/Mvc/CRM/AccountDetail.mvc?accountId=";
