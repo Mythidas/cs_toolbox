@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   paginateTag?: string;
+  refreshInterval?: number;
   renderFilter?: (table: TableType<TData>) => React.ReactNode;
 }
 
@@ -37,6 +38,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   paginateTag,
+  refreshInterval,
   renderFilter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -111,7 +113,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="border-t-[1px] border-border pt-sm">
-        <DataTablePagination table={table} tag={paginateTag} />
+        <DataTablePagination table={table} tag={paginateTag} refreshInterval={refreshInterval} />
       </div>
     </div>
   )

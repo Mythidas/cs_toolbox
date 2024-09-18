@@ -12,21 +12,48 @@ import React from "react"
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
   tag?: string;
+  refreshInterval?: number;
 }
 
 export function DataTablePagination<TData>({
   table,
   tag,
+  refreshInterval
 }: DataTablePaginationProps<TData>) {
+  const [refreshTimerCount, setRefreshTimerCount] = React.useState(refreshInterval || null);
+
   // Set the page size to 20 when the component mounts
   React.useEffect(() => {
     table.setPageSize(50)
   }, [])
 
+  React.useEffect(() => {
+    if (!refreshTimerCount) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setRefreshTimerCount(refreshTimerCount - 1000);
+
+      if (refreshTimerCount <= 0) {
+        window.location.reload();
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [refreshTimerCount])
+
   return (
     <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredRowModel().rows.length} {tag || "row"}(s)
+      <div className="flex-1 text-sm text-muted-foreground space-x-6">
+        <span>{table.getFilteredRowModel().rows.length} {tag || "row"}(s)</span>
+        {refreshTimerCount && (
+          <span>
+            Refresh in {Math.floor(refreshTimerCount / 60000)}:{Math.floor((refreshTimerCount % 60000) / 1000).toString().padStart(2, '0')} minutes
+          </span>
+        )}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
