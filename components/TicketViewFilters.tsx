@@ -1,91 +1,139 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
 import React from "react";
 import { Input } from "./ui/input";
 import ComboInput from "./ComboInput";
 import { type TicketViewProps } from "./TicketViewTable";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { Loader } from "lucide-react";
 
 interface TicketViewFiltersProps {
   view: TicketViewProps;
-  table: Table<AutoTaskTicket>;
+  params: AutoTaskTicketFetchParams;
 }
 
-const TicketViewFilters = ({ view, table }: TicketViewFiltersProps) => {
-  function handleChange(column: keyof AutoTaskTicket, value: string | number | null) {
-    console.log(column, value);
+const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
+  const [filters, setFilters] = React.useState<AutoTaskTicketFetchParams>(params);
+  const [loading, setLoading] = React.useState(false);
 
-    if (value === table.getColumn(column)?.getFilterValue()) {
-      table.getColumn(column)?.setFilterValue(undefined);
-      return;
-    }
+  const { replace } = useRouter();
+  const pathname = usePathname();
 
-    table.getColumn(column)?.setFilterValue(value);
+  React.useEffect(() => {
+    setLoading(false);
+  }, [view]);
+
+  function handleChange(column: keyof AutoTaskTicketFetchParams, value: string | number | null) {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [column]: value === prevFilters[column] ? null : value,
+    }));
+
+    const urlParams = convertFiltersToURLParams(filters);
+  }
+
+  function handleApply() {
+    setLoading(true);
+    const urlParams = convertFiltersToURLParams(filters);
+    replace(`${pathname}${urlParams}`);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+  }
+
+  function convertFiltersToURLParams(filters: AutoTaskTicketFetchParams): string {
+    return Object.entries(filters).reduce((acc, [key, value]) => {
+      if (value === null || value === undefined) {
+        return acc;
+      }
+
+      if (Array.isArray(value)) {
+        return `${acc}${value.map((_val) => `${key}=${_val}`).join("&")}&`;
+      }
+
+      return `${acc}${key}=${value}&`;
+    }, "?").slice(0, -1);
   }
 
   return (
-    <div className="flex w-full h-fit py-sm p-1 items-center space-x-2 overflow-x-auto">
-      <Input
-        placeholder="Search Ticket Number..."
-        value={(table.getColumn("ticketNumber")?.getFilterValue() as string) ?? ""}
-        onChange={(event) => handleChange("ticketNumber", event.target.value)}
-        className="w-fit max-w-xs"
-      />
-      <Input
-        placeholder="Search Title..."
-        value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-        onChange={(event) => handleChange("title", event.target.value)}
-        className="max-w-xl min-w-fit"
-      />
-      <div>
-        <ComboInput
-          options={view.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
-            value: company.id.toString(),
-            label: company.companyName,
-          }))}
-          onChange={(selectedOption) => handleChange("companyID", Number(selectedOption.value))}
-          placeholder="Company"
+    <div className="flex w-full justify-between">
+      <div className="flex w-full h-fit px-1 py-sm items-center space-x-2 overflow-x-auto">
+        <Input
+          placeholder="Search Ticket Number..."
+          value={filters.ticketNumber ?? ""}
+          onChange={(event) => handleChange("ticketNumber", event.target.value)}
+          className="w-fit max-w-xs"
         />
+        <Input
+          placeholder="Search Title..."
+          value={filters.title ?? ""}
+          onChange={(event) => handleChange("title", event.target.value)}
+          className="max-w-xl min-w-fit"
+        />
+        <div>
+          <ComboInput
+            defaultValue={filters.companyID ? filters.companyID.toString() : ""}
+            options={view.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
+              value: company.id.toString(),
+              label: company.companyName,
+            }))}
+            onChange={(selectedOption) => handleChange("companyID", Number(selectedOption.value))}
+            placeholder="Company"
+          />
+        </div>
+        <div>
+          <ComboInput
+            defaultValue={filters.queueID ? filters.queueID.toString() : ""}
+            options={view.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
+              value: _queue.value,
+              label: `${_queue.label} (${view.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
+            }))}
+            onChange={(selectedOption) => handleChange("queueID", Number(selectedOption.value))}
+            placeholder="queue"
+          />
+        </div>
+        <div>
+          <ComboInput
+            defaultValue={filters.assignedResourceID ? filters.assignedResourceID.toString() : ""}
+            options={view.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
+              value: resource.id.toString(),
+              label: `${resource.firstName} ${resource.lastName}`,
+            }))}
+            onChange={(selectedOption) => handleChange("assignedResourceID", Number(selectedOption.value))}
+            placeholder="Resource"
+          />
+        </div>
+        <div>
+          <ComboInput
+            defaultValue={filters.status ? filters.status.toString() : ""}
+            options={view.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
+              value: status.value,
+              label: status.label,
+            }))}
+            onChange={(selectedOption) => handleChange("status", Number(selectedOption.value))}
+            placeholder="Status"
+          />
+        </div>
+        <div>
+          <ComboInput
+            defaultValue={filters.priority ? filters.priority.toString() : ""}
+            options={view.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
+              value: priority.value,
+              label: priority.label,
+            }))}
+            onChange={(selectedOption) => handleChange("priority", Number(selectedOption.value))}
+            placeholder="Priority"
+          />
+        </div>
       </div>
-      <div>
-        <ComboInput
-          options={view.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
-            value: _queue.value,
-            label: `${_queue.label} (${view.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
-          }))}
-          onChange={(selectedOption) => handleChange("queueID", Number(selectedOption.value))}
-          placeholder="queue"
-        />
-      </div>
-      <div>
-        <ComboInput
-          options={view.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
-            value: resource.id.toString(),
-            label: `${resource.firstName} ${resource.lastName}`,
-          }))}
-          onChange={(selectedOption) => handleChange("assignedResourceID", Number(selectedOption.value))}
-          placeholder="Resource"
-        />
-      </div>
-      <div>
-        <ComboInput
-          options={view.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
-            value: status.value,
-            label: status.label,
-          }))}
-          onChange={(selectedOption) => handleChange("status", Number(selectedOption.value))}
-          placeholder="Status"
-        />
-      </div>
-      <div>
-        <ComboInput
-          options={view.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
-            value: priority.value,
-            label: priority.label,
-          }))}
-          onChange={(selectedOption) => handleChange("priority", Number(selectedOption.value))}
-          placeholder="Priority"
-        />
+      <div className="px-1 py-sm">
+        <Button onClick={handleApply} disabled={loading}>
+          {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
+          <span>Apply</span>
+        </Button>
       </div>
     </div>
   );

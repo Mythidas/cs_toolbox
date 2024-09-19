@@ -1,6 +1,7 @@
 import { getTickets } from "@/lib/actions/ticket.action";
 import React from "react";
 import TicketViewTable from "./TicketViewTable";
+import TicketViewFilters from "./TicketViewFilters";
 
 const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
   const ticketFetchParams: AutoTaskTicketFetchParams = {
@@ -17,7 +18,8 @@ const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: st
   const ticketInfo = await getTickets(ticketFetchParams);
 
   return (
-    <div className="size-full">
+    <div className="flex flex-col size-full">
+      <TicketViewFilters view={ticketInfo} params={ticketFetchParams} />
       <TicketViewTable view={ticketInfo} />
     </div>
   )

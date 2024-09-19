@@ -184,9 +184,7 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
   ];
 
   return (
-    <div className="size-full">
-      <DataTable data={view.tickets} columns={columns} paginateTag="Ticket" refreshInterval={60 * 1000 * 10} renderFilter={(_table: Table<AutoTaskTicket>) => (<TicketViewFilters view={view} table={_table} />)} />
-    </div>
+    <DataTable data={view.tickets} columns={columns} paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
   )
 }
 

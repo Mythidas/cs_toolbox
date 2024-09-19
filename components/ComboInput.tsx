@@ -22,14 +22,15 @@ import {
 interface ComboInputProps {
   options: Option[];
   placeholder?: string;
+  defaultValue?: string;
   onChange?: (option: Option) => void;
 }
 
-const ComboInput = ({ options, placeholder, onChange }: ComboInputProps) => {
+const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInputProps) => {
   const COMBO_WIDTH = 260;
 
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(defaultValue || "");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

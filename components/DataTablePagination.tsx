@@ -8,6 +8,7 @@ import { Table } from "@tanstack/react-table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Button } from "./ui/button"
 import React from "react"
+import { useRouter } from "next/navigation"
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -21,6 +22,7 @@ export function DataTablePagination<TData>({
   refreshInterval
 }: DataTablePaginationProps<TData>) {
   const [refreshTimerCount, setRefreshTimerCount] = React.useState(refreshInterval || null);
+  const router = useRouter();
 
   // Set the page size to 20 when the component mounts
   React.useEffect(() => {
@@ -28,7 +30,7 @@ export function DataTablePagination<TData>({
   }, [])
 
   React.useEffect(() => {
-    if (!refreshTimerCount) {
+    if (refreshTimerCount === null) {
       return;
     }
 
@@ -36,7 +38,8 @@ export function DataTablePagination<TData>({
       setRefreshTimerCount(refreshTimerCount - 1000);
 
       if (refreshTimerCount <= 0) {
-        window.location.reload();
+        router.refresh();
+        setRefreshTimerCount(refreshInterval || 0);
       }
     }, 1000)
 
@@ -49,10 +52,12 @@ export function DataTablePagination<TData>({
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground space-x-6">
         <span>{table.getFilteredRowModel().rows.length} {tag || "row"}(s)</span>
-        {refreshTimerCount && (
+        {refreshInterval && refreshTimerCount ? (
           <span>
             Refresh in {Math.floor(refreshTimerCount / 60000)}:{Math.floor((refreshTimerCount % 60000) / 1000).toString().padStart(2, '0')} minutes
           </span>
+        ) : (
+          <span>Refresh in 0:00 minutes</span>
         )}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
