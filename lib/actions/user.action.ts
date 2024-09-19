@@ -21,6 +21,11 @@ export async function signInWithMicrosoft() {
 }
 
 export async function getLoggedInUser() {
-  const { account } = await createSessionClient();
-  return account.get();
+  try {
+    const { account } = await createSessionClient();
+    return account.get();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

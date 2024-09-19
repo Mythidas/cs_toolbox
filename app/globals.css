@@ -24,6 +24,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
 }
 
 
