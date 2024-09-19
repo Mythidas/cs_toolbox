@@ -10,11 +10,12 @@ import { usePathname } from "next/navigation";
 import { Loader } from "lucide-react";
 
 interface TicketViewFiltersProps {
-  view: TicketViewProps;
+  info: TicketViewProps;
   params: AutoTaskTicketFetchParams;
+  views: Option[];
 }
 
-const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
+const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
   const [filters, setFilters] = React.useState<AutoTaskTicketFetchParams>(params);
   const [loading, setLoading] = React.useState(false);
 
@@ -23,15 +24,13 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
 
   React.useEffect(() => {
     setLoading(false);
-  }, [view]);
+  }, [info]);
 
   function handleChange(column: keyof AutoTaskTicketFetchParams, value: string | number | null) {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [column]: value === prevFilters[column] ? null : value,
     }));
-
-    const urlParams = convertFiltersToURLParams(filters);
   }
 
   function handleApply() {
@@ -71,12 +70,12 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
           placeholder="Search Title..."
           value={filters.title ?? ""}
           onChange={(event) => handleChange("title", event.target.value)}
-          className="max-w-xl min-w-fit"
+          className="max-w-sm min-w-fit"
         />
         <div>
           <ComboInput
             defaultValue={filters.companyID ? filters.companyID.toString() : ""}
-            options={view.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
+            options={info.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
               value: company.id.toString(),
               label: company.companyName,
             }))}
@@ -87,9 +86,9 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
         <div>
           <ComboInput
             defaultValue={filters.queueID ? filters.queueID.toString() : ""}
-            options={view.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
+            options={info.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
               value: _queue.value,
-              label: `${_queue.label} (${view.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
+              label: `${_queue.label} (${info.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
             }))}
             onChange={(selectedOption) => handleChange("queueID", Number(selectedOption.value))}
             placeholder="queue"
@@ -98,7 +97,7 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
         <div>
           <ComboInput
             defaultValue={filters.assignedResourceID ? filters.assignedResourceID.toString() : ""}
-            options={view.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
+            options={info.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
               value: resource.id.toString(),
               label: `${resource.firstName} ${resource.lastName}`,
             }))}
@@ -109,7 +108,7 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
         <div>
           <ComboInput
             defaultValue={filters.status ? filters.status.toString() : ""}
-            options={view.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
+            options={info.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
               value: status.value,
               label: status.label,
             }))}
@@ -120,7 +119,7 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
         <div>
           <ComboInput
             defaultValue={filters.priority ? filters.priority.toString() : ""}
-            options={view.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
+            options={info.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
               value: priority.value,
               label: priority.label,
             }))}
@@ -129,7 +128,13 @@ const TicketViewFilters = ({ view, params }: TicketViewFiltersProps) => {
           />
         </div>
       </div>
-      <div className="px-1 py-sm">
+      <div className="flex space-x-2 px-1 py-sm">
+        <ComboInput
+          defaultValue={views.find((view) => view.value === convertFiltersToURLParams(params))?.value || undefined}
+          options={views}
+          onChange={(selectedOption) => replace(selectedOption.value)}
+          placeholder="Views"
+        />
         <Button onClick={handleApply} disabled={loading}>
           {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
           <span>Apply</span>

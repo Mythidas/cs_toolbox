@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function parseStringify(value: any) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 export class BaseClient {
   name: string;
 

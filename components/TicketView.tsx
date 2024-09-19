@@ -2,6 +2,7 @@ import { getTickets } from "@/lib/actions/ticket.action";
 import React from "react";
 import TicketViewTable from "./TicketViewTable";
 import TicketViewFilters from "./TicketViewFilters";
+import { getLoggedInUser, getUserDocument } from "@/lib/actions/user.action";
 
 const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
   const ticketFetchParams: AutoTaskTicketFetchParams = {
@@ -16,10 +17,14 @@ const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: st
   };
 
   const ticketInfo = await getTickets(ticketFetchParams);
+  const loggedInUser = await getLoggedInUser();
+  const userDocument = await getUserDocument(loggedInUser?.$id!);
+  const resourceId = ticketInfo.resources.find((resource) => resource.email === loggedInUser?.email)?.id;
+  const ticketViews = [{ label: "My Tickets", value: `?completed=false&assignedResourceID=${resourceId}` }];
 
   return (
     <div className="flex flex-col size-full">
-      <TicketViewFilters view={ticketInfo} params={ticketFetchParams} />
+      <TicketViewFilters info={ticketInfo} params={ticketFetchParams} views={ticketViews} />
       <TicketViewTable view={ticketInfo} />
     </div>
   )

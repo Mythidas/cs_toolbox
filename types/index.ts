@@ -12,6 +12,12 @@ type Site = {
   sophosTenantId: string;
 }
 
+// =============== DATABASE ===============
+type UserDocument = {
+  userId: string;
+  ticketViews: string[];
+}
+
 // =============== AutoTask ===============
 
 type AutoTaskTicket = {
