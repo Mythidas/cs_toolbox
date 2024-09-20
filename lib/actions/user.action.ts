@@ -17,11 +17,10 @@ export async function signInWithMicrosoft() {
   const { account } = await createAdminClient();
   const origin = headers().get("origin");
 
-  console.log(`[${origin}] Attempting URL redirect...`);
-
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
-    `http://tools.csit.pro/api/oauth`,
+    `${origin}/api/oauth`,
+    `${origin}/sign-in`
   );
 
   console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to /sign-in if not redirected. Proceed to /api/oauth if redirected.`);
