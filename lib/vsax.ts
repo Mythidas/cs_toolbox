@@ -14,7 +14,7 @@ class VSAXClient extends BaseClient {
   }
 
   async getSites() {
-    let siteList: Site[] = [];
+    let siteList: VSAXSite[] = [];
     let totalCount = 1;
 
     try {
@@ -34,36 +34,91 @@ class VSAXClient extends BaseClient {
         const siteData = await siteFetch.json() as { Data: VSAXSite[], Meta: { TotalCount: number } };
         totalCount = siteData.Meta.TotalCount;
 
-        siteList.push(...siteData.Data.map(_site => ({
-          name: _site.Name,
-          parentName: _site.ParentName,
-          vsaId: _site.Id,
-          parentVSAId: _site.ParentId,
-          autoTaskId: _site.PsaMappingId,
-          sophosTenantId: "",
-        })));
+        siteList.push(...siteData.Data);
 
         if (siteList.length >= siteData.Meta.TotalCount) {
           break;
         }
       }
 
-      return siteList.sort((a, b) => a.name.localeCompare(b.name));
+      return siteList.sort((a, b) => a.Name.localeCompare(b.Name));
     } catch (error) {
       this._throw(error);
       return [];
     }
   }
-}
 
-interface VSAXSite {
-  Id: number;
-  Name: string;
-  ParentId: number;
-  ParentName: string;
-  PsaMappingId: number;
-  PsaIntegrationType: string;
-  HasCustomFields: boolean;
+  async getSite(siteId: string): Promise<VSAXSite | null> {
+    try {
+      const siteFetch = await fetch(`${NEXT_PUBLIC_VSAX_URL}/sites/${siteId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Basic ${this.BEARER_TOKEN}`
+        }
+      });
+
+      if (!siteFetch.ok) {
+        this._throw(siteFetch.statusText);
+      }
+
+      const site = await siteFetch.json() as { Data: VSAXSite };
+      const sophosTenantId = await this.getSiteSophosTenantId(siteId);
+
+      if (!sophosTenantId) {
+        this._throw("Failed to get Sophos Tenant ID");
+      }
+
+      return { ...site.Data, sophosTenantId: sophosTenantId || undefined };
+    } catch (error) {
+      this._throw(error);
+      return null;
+    }
+  }
+
+  async getDevices(siteId: string) {
+    try {
+      const deviceFetch = await fetch(`${NEXT_PUBLIC_VSAX_URL}/assets?$filter=SiteId eq ${siteId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Basic ${this.BEARER_TOKEN}`
+        }
+      });
+
+      if (!deviceFetch.ok) {
+        this._throw(deviceFetch.statusText);
+      }
+
+      const devices = await deviceFetch.json() as { Data: any[] };
+      return devices.Data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  private async getSiteSophosTenantId(siteId: string) {
+    try {
+      const siteFetch = await fetch(`${NEXT_PUBLIC_VSAX_URL}/sites/${siteId}/customfields?$filter=Id eq 504`, { // 504 is the custom field ID for Sophos Tenant ID
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Basic ${this.BEARER_TOKEN}`
+        }
+      });
+
+      if (!siteFetch.ok) {
+        this._throw(siteFetch.statusText);
+      }
+
+      const customFields = await siteFetch.json() as { Data: VSAXCustomField[] };
+      return customFields?.Data[0].Value || null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
 }
 
 interface VSAXCustomField {

@@ -3,6 +3,7 @@
 import { AutoTaskClient } from "../autotask";
 import { Timer } from "../utils";
 
+// TODO: Separate get tickets parts into separate functions
 export async function getTickets(params: AutoTaskTicketFetchParams) {
   try {
     const autotaskClient = new AutoTaskClient();

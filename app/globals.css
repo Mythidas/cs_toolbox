@@ -28,6 +28,10 @@ body {
   .flex-center {
     @apply flex items-center justify-center;
   }
+
+  .card {
+    @apply bg-card rounded-md shadow-md border-border border-[1px];
+  }
 }
 
 

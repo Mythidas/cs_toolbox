@@ -3,15 +3,6 @@ type Option = {
   value: string;
 };
 
-type Site = {
-  name: string;
-  parentName: string;
-  vsaId: number;
-  parentVSAId: number;
-  autoTaskId: number;
-  sophosTenantId: string;
-}
-
 // =============== DATABASE ===============
 type UserDocument = {
   userId: string;
@@ -241,4 +232,56 @@ type AutoTaskTicketFetchParams = {
   assignedResourceID?: number[];
   status?: number[];
   priority?: number[];
+}
+
+// =============== VSAX ===============
+
+type VSAXSite = {
+  Id: number;
+  Name: string;
+  ParentId: number;
+  ParentName: string;
+  PsaMappingId: number;
+  PsaIntegrationType: string;
+  HasCustomFields: boolean;
+  sophosTenantId?: string;
+}
+
+// =============== Sophos ===============
+
+type SophosDevice = {
+  id: string;
+  type: string;
+  tenant: {
+    id: string;
+  };
+  hostname: string;
+  health: {
+    overall: string;
+    threats: any;
+    services: any;
+  };
+  os: {
+    isServer: boolean;
+    platform: string;
+    name: string;
+    majorVersion: number;
+    minorVersion: number;
+    build: number;
+  };
+  ipv4Addresses: string[];
+  macAddresses: string[];
+  associatedPerson: {
+    name: string;
+    viaLogin: string;
+    id: string;
+  };
+  tamperProtectionEnabled: boolean;
+  assignedProducts: any[];
+  lastSeenAt: string;
+  isolation: {
+    status: string;
+    adminIsolated: boolean;
+    selfIsolated: boolean;
+  };
 }

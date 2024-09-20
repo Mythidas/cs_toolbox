@@ -26,3 +26,14 @@ export async function getAutoTaskSites() {
     return [];
   }
 }
+
+export async function getVSASite(siteId: string) {
+  try {
+    const client = new VSAXClient();
+    const site = await client.getSite(siteId);
+    return site;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
