@@ -18,6 +18,8 @@ export async function signInWithMicrosoft() {
   const { account } = await createAdminClient();
   const origin = headers().get("origin");
 
+  console.log(`[${origin}] Attempting URL redirect...`);
+  
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
     `${NEXT_PUBLIC_ORIGIN}/api/oauth`,
