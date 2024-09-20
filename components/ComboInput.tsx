@@ -61,7 +61,7 @@ const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInput
                 <CommandItem
                   key={_option.label}
                   value={_option.label}
-                  onSelect={(_current) => {
+                  onSelect={() => {
                     setValue(_option.value === value ? "" : _option.value);
                     setOpen(false);
                     onChange?.(_option);

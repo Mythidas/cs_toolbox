@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 interface DeviceHeaderProps {
   sites: VSAXSite[];
-  selectedSite: any;
+  selectedSite: VSAXSite | null;
 }
 
 const DeviceHeader = ({ sites, selectedSite }: DeviceHeaderProps) => {

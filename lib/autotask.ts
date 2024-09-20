@@ -146,9 +146,6 @@ export class AutoTaskClient extends BaseClient {
 
   async getActiveCompanies() {
     try {
-      const today = new Date();
-      const lastYear = new Date(today.setFullYear(today.getFullYear() - 2)).toISOString();
-
       const apiFilter: AutoTaskAPIFilter<AutoTaskCompany> = {
         Filter: [
           { field: "isActive", op: "eq", value: "true" },

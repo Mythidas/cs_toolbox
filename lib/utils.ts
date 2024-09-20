@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function parseStringify(value: any) {
+export function parseStringify(value: object) {
   return JSON.parse(JSON.stringify(value));
 }
 
@@ -20,7 +20,7 @@ export class BaseClient {
     console.log(`[${this.name}]: ${message}`);
   }
 
-  protected _throw(error: any) {
+  protected _throw(error: unknown) {
     throw new Error(`[${this.name}]: ${error}`);
   }
 }

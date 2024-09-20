@@ -8,6 +8,7 @@ interface DeviceViewProps {
 const DeviceView = async ({ site }: DeviceViewProps) => {
   const vsaxDevices = await getVSAXDevices(site.Id.toString());
   const sophosDevices = await getSophosDevices(site.sophosTenantId || "");
+  console.log(vsaxDevices, sophosDevices);
 
   return (
     <div>

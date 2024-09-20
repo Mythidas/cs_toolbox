@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { ColumnDef, Table } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/DataTable";
 import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
-import TicketViewFilters from "./TicketViewFilters";
 import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL } from "@/constants";
 import { Link } from "lucide-react";
 

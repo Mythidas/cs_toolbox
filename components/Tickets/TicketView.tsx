@@ -2,7 +2,7 @@ import { getTickets } from "@/lib/actions/ticket.action";
 import React from "react";
 import TicketViewTable from "./TicketViewTable";
 import TicketViewFilters from "./TicketViewFilters";
-import { getLoggedInUser, getUserDocument } from "@/lib/actions/user.action";
+import { getLoggedInUser } from "@/lib/actions/user.action";
 
 const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
   const ticketFetchParams: AutoTaskTicketFetchParams = {
@@ -18,8 +18,8 @@ const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: st
 
   const ticketInfo = await getTickets(ticketFetchParams);
   const loggedInUser = await getLoggedInUser();
-  const userDocument = await getUserDocument(loggedInUser?.$id!);
-  const resourceId = ticketInfo.resources.find((resource) => resource.email === loggedInUser?.email)?.id;
+  //const userDocument = await getUserDocument(loggedInUser?.$id!);
+  const resourceId = ticketInfo.resources.find((resource) => resource.email === loggedInUser?.email)?.id || 0;
   const ticketViews = [{ label: "My Tickets", value: `?completed=false&assignedResourceID=${resourceId}` }];
 
   return (

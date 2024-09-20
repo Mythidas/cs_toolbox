@@ -7,14 +7,13 @@ import {
 import Image from "next/image";
 import Navmenu from "./Navmenu";
 import Link from "next/link";
+import { Models } from "node-appwrite";
 
 interface NavbarProps {
-  loggedInUser: any;
+  loggedInUser: Models.User<Models.Preferences>;
 }
 
 const Navbar = async ({ loggedInUser }: NavbarProps) => {
-  //const sites = await getSites();
-
   return (
     <NavigationMenu className="flex max-w-full w-full justify-between p-2 border-b-[1px]">
       <div className="flex gap-sm">

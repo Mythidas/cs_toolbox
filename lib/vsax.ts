@@ -14,7 +14,7 @@ class VSAXClient extends BaseClient {
   }
 
   async getSites() {
-    let siteList: VSAXSite[] = [];
+    const siteList: VSAXSite[] = [];
     let totalCount = 1;
 
     try {
@@ -90,7 +90,7 @@ class VSAXClient extends BaseClient {
         this._throw(deviceFetch.statusText);
       }
 
-      const devices = await deviceFetch.json() as { Data: any[] };
+      const devices = await deviceFetch.json() as { Data: unknown[] };
       return devices.Data;
     } catch (error) {
       console.error(error);
