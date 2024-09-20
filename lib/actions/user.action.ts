@@ -19,11 +19,9 @@ export async function signInWithMicrosoft() {
   const origin = headers().get("origin");
 
   console.log(`[${origin}] Attempting URL redirect...`);
-  
+
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
-    `${NEXT_PUBLIC_ORIGIN}/api/oauth`,
-    `${NEXT_PUBLIC_ORIGIN}/sign-in`
   );
 
   console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to /sign-in if not redirected. Proceed to /api/oauth if redirected.`);
