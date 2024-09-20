@@ -7,7 +7,6 @@ import { ID, OAuthProvider, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
 
 const {
-  NEXT_PUBLIC_ORIGIN,
   APPWRITE_DATABASE_ID,
   APPWRITE_USER_COLLECTION,
 } = process.env;
