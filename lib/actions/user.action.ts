@@ -21,6 +21,7 @@ export async function signInWithMicrosoft() {
 
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
+    `http://tools.csit.pro/api/oauth`,
   );
 
   console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to /sign-in if not redirected. Proceed to /api/oauth if redirected.`);
