@@ -23,6 +23,8 @@ export async function signInWithMicrosoft() {
     `${origin}/sign-in`
   );
 
+  console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to /sign-in if not redirected. Proceed to /api/oauth if redirected.`);
+
   return redirect(redirectUrl);
 }
 
