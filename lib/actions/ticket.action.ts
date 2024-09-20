@@ -29,3 +29,13 @@ export async function getTickets(params: AutoTaskTicketFetchParams) {
     return { tickets: [], companies: [], queues: [], statuses: [], priorities: [], resources: [] };
   }
 }
+
+export async function getTicketResources() {
+  try {
+    const autotaskClient = new AutoTaskClient();
+    return await autotaskClient.getResources();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}

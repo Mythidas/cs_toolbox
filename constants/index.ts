@@ -9,6 +9,11 @@ export const NAV_LINKS = [
     title: "Tickets",
     icon: "/icons/ticket.svg",
   },
+  {
+    route: "/devices",
+    title: "Devices",
+    icon: "/icons/desktop.svg",
+  },
 ];
 
 export const AUTOTASK_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/TicketDetail.mvc?workspace=False&ticketId=";
