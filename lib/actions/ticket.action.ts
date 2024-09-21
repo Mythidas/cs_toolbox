@@ -31,6 +31,17 @@ export async function getTickets(params: AutoTaskTicketFetchParams) {
   }
 }
 
+export async function getTicketCompanyLocations(tickets: AutoTaskTicket[]) {
+  try {
+    const autotaskClient = new AutoTaskClient();
+    const companyIds = tickets.map(ticket => ticket.companyID);
+    return await autotaskClient.getCompanyLocations(companyIds);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 export async function getTicketResources() {
   try {
     const autotaskClient = new AutoTaskClient();

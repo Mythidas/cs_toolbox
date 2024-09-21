@@ -35,6 +35,7 @@ export class AutoTaskClient extends BaseClient {
           "priority",
           "assignedResourceID",
           "lastActivityDate",
+          "companyLocationID"
         ]
       };
 
@@ -170,6 +171,37 @@ export class AutoTaskClient extends BaseClient {
 
       const companyData = await companyFetch.json();
       return companyData.items as AutoTaskCompany[];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async getCompanyLocations(companyIds: number[]) {
+    try {
+      const apiFilter: AutoTaskAPIFilter<AutoTaskCompanyLocation> = {
+        Filter: [
+          { field: "companyID", op: "in", value: companyIds },
+        ],
+      };
+
+      const companyLocationFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/CompanyLocations/query?search=${JSON.stringify(apiFilter)}`, {
+        method: "GET",
+        headers: {
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
+          "Content-Type": "application/json"
+        },
+        cache: "force-cache",
+      });
+
+      if (!companyLocationFetch.ok) {
+        this._throw(companyLocationFetch.statusText);
+      }
+
+      const companyLocationData = await companyLocationFetch.json();
+      return companyLocationData.items as AutoTaskCompanyLocation[];
     } catch (error) {
       console.error(error);
       return [];

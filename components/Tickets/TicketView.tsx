@@ -1,4 +1,4 @@
-import { getTickets } from "@/lib/actions/ticket.action";
+import { getTicketCompanyLocations, getTickets } from "@/lib/actions/ticket.action";
 import React from "react";
 import TicketViewTable from "./TicketViewTable";
 import TicketViewFilters from "./TicketViewFilters";
@@ -17,15 +17,18 @@ const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: st
   };
 
   const ticketInfo = await getTickets(ticketFetchParams);
+  const ticketLocations = await getTicketCompanyLocations(ticketInfo.tickets);
   const loggedInUser = await getLoggedInUser();
   //const userDocument = await getUserDocument(loggedInUser?.$id!);
   const resourceId = ticketInfo.resources.find((resource) => resource.email === loggedInUser?.email)?.id || 0;
   const ticketViews = [{ label: "My Tickets", value: `?completed=false&assignedResourceID=${resourceId}` }];
 
+  const tickets = { ...ticketInfo, locations: ticketLocations };
+
   return (
     <div className="flex flex-col size-full">
-      <TicketViewFilters info={ticketInfo} params={ticketFetchParams} views={ticketViews} />
-      <TicketViewTable view={ticketInfo} />
+      <TicketViewFilters info={tickets} params={ticketFetchParams} views={ticketViews} />
+      <TicketViewTable view={tickets} />
     </div>
   )
 }

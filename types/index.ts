@@ -159,6 +159,33 @@ type AutoTaskCompany = {
   }[];
 };
 
+type AutoTaskCompanyLocation = {
+  id: number;
+  address1: string;
+  address2: string;
+  alternatePhone1: string;
+  alternatePhone2: string;
+  city: string;
+  companyID: number;
+  countryID: number;
+  description: string;
+  fax: string;
+  isActive: boolean;
+  isPrimary: boolean;
+  isTaxExempt: boolean;
+  overrideCompanyTaxSettings: boolean;
+  name: string;
+  phone: string;
+  postalCode: string;
+  roundtripDistance: number;
+  state: string;
+  taxRegionID: number;
+  userDefinedFields: {
+    name: string;
+    value: string;
+  }[];
+}
+
 type AutoTaskResource = {
   id: number;
   accountingReferenceID: string;

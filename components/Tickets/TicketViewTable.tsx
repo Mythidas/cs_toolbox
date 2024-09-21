@@ -4,7 +4,7 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/DataTable";
 import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
-import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL } from "@/constants";
+import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL, TIMEZONES } from "@/constants";
 import { Link } from "lucide-react";
 
 export interface TicketViewProps {
@@ -14,6 +14,7 @@ export interface TicketViewProps {
   statuses: AutoTaskFieldValue[];
   priorities: AutoTaskFieldValue[];
   resources: AutoTaskResource[];
+  locations: AutoTaskCompanyLocation[];
 }
 
 const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
@@ -179,8 +180,31 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
           </div>
         )
       },
+    },
+    {
+      accessorKey: "companyLocationID",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="TZ" />
+      ),
+      cell: ({ row }) => {
+        const location = view.locations.find((location) => location.id === row.original.companyLocationID);
+        return (
+          <div>
+            {location ? getTimezoneFromState(location.state)?.label : ""}
+          </div>
+        )
+      },
+      sortingFn: (a, b) => {
+        const offsetA = getTimezoneFromState(view.locations.find((location) => location.id === a.original.companyLocationID)?.state || "")?.offset || 0;
+        const offsetB = getTimezoneFromState(view.locations.find((location) => location.id === b.original.companyLocationID)?.state || "")?.offset || 0;
+        return offsetA - offsetB;
+      }
     }
   ];
+
+  function getTimezoneFromState(state: string) {
+    return TIMEZONES.find((timezone) => timezone.state.toLowerCase() === state.toLowerCase() || timezone.shorthand.toLowerCase() === state.toLowerCase());
+  }
 
   return (
     <DataTable data={view.tickets} columns={columns} paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
