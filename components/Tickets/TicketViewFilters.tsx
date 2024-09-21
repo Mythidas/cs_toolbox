@@ -15,6 +15,8 @@ interface TicketViewFiltersProps {
   views: Option[];
 }
 
+const URL_TIMEOUT = 7000;
+
 const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
   const [filters, setFilters] = React.useState<AutoTaskTicketFetchParams>(params);
   const [loading, setLoading] = React.useState(false);
@@ -22,16 +24,35 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
   const { replace } = useRouter();
   const pathname = usePathname();
 
+
   React.useEffect(() => {
     setLoading(false);
     setFilters(params);
   }, [params]);
 
-  function handleChange(column: keyof AutoTaskTicketFetchParams, value: string | number | null) {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [column]: value === prevFilters[column] ? null : value,
-    }));
+  function handleChange(column: keyof AutoTaskTicketFetchParams, value: string | number | undefined) {
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters };
+      console.log(newFilters);
+      if (column === "ticketNumber" || column === "title") {
+        if (newFilters[column] === value) {
+          newFilters[column] = undefined;
+          return newFilters;
+        }
+
+        newFilters[column] = value as string;
+      }
+      if (column === "companyID" || column === "queueID" || column === "assignedResourceID" || column === "status" || column === "priority") {
+        if (newFilters[column]?.includes(value as number)) {
+          newFilters[column] = newFilters[column]?.filter((item) => item !== value);
+          return newFilters;
+        }
+
+        newFilters[column] = [value as number];
+      }
+
+      return newFilters;
+    });
   }
 
   function handleApply() {
@@ -41,7 +62,16 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
 
     setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, URL_TIMEOUT);
+  }
+
+  function handleViewChange(option: Option) {
+    setLoading(true);
+    replace(`${pathname}${option.value}`);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, URL_TIMEOUT);
   }
 
   function convertFiltersToURLParams(filters: AutoTaskTicketFetchParams): string {
@@ -133,7 +163,7 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
         <ComboInput
           defaultValue={views.find((view) => view.value === convertFiltersToURLParams(params))?.value || undefined}
           options={views}
-          onChange={(selectedOption) => replace(selectedOption.value)}
+          onChange={handleViewChange}
           placeholder="Views"
         />
         <Button onClick={handleApply} disabled={loading}>
