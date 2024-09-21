@@ -15,3 +15,8 @@ export function middleware() {
 
   return res
 }
+
+// specify the path regex to apply the middleware to
+export const config = {
+  matcher: '/:path*',
+}
