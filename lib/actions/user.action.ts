@@ -33,7 +33,7 @@ export async function signInWithMicrosoft() {
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
-    return account.get();
+    return await account.get();
   } catch (error) {
     console.error(error);
     return null;

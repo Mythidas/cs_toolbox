@@ -7,9 +7,10 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 const Tickets = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
+  const loggedInUser = await getLoggedInUser();
+  const resources = await getTicketResources();
+
   if (!searchParams || Object.keys(searchParams).length === 0) {
-    const loggedInUser = await getLoggedInUser();
-    const resources = await getTicketResources();
     const resourceId = resources.find((resource) => resource.email === loggedInUser?.email)?.id;
 
     if (resourceId) {

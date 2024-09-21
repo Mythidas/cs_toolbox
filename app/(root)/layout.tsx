@@ -3,6 +3,8 @@ import { getLoggedInUser } from "@/lib/actions/user.action";
 import { redirect } from "next/navigation";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 interface RootLayoutProps {
   children: React.ReactNode;
 }
