@@ -22,10 +22,10 @@ export async function signInWithMicrosoft() {
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
     `${origin}/api/oauth`,
-    `${origin}/sign-in`
+    `${origin}/`
   );
 
-  console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to /sign-in if not redirected. Proceed to /api/oauth if redirected.`);
+  console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to / if not redirected. Proceed to /api/oauth if redirected.`);
 
   return redirect(redirectUrl);
 }
