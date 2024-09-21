@@ -7,6 +7,7 @@ import { ID, OAuthProvider, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
 
 const {
+  NEXT_PUBLIC_ORIGIN,
   APPWRITE_DATABASE_ID,
   APPWRITE_USER_COLLECTION,
 } = process.env;
@@ -21,8 +22,8 @@ export async function signInWithMicrosoft() {
 
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
-    `${origin}/api/oauth`,
-    `${origin}/sign-in`
+    `${NEXT_PUBLIC_ORIGIN}/api/oauth`,
+    `${NEXT_PUBLIC_ORIGIN}/sign-in`
   );
 
   console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to /sign-in if not redirected. Proceed to /api/oauth if redirected.`);
