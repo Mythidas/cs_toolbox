@@ -2,9 +2,10 @@
   "name": "cs_toolbox",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:2301",
   "scripts": {
     "dev": "next dev",
-    "dev:experiment": "next dev -p 2301",
+    "dev:experiment": "next dev -p 2301 --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
