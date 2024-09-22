@@ -158,6 +158,10 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
             placeholder="Priority"
           />
         </div>
+        <Button onClick={handleApply} disabled={loading}>
+          {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
+          <span>Apply</span>
+        </Button>
       </div>
       <div className="flex space-x-2 px-1 py-sm">
         <ComboInput
@@ -166,10 +170,6 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
           onChange={handleViewChange}
           placeholder="Views"
         />
-        <Button onClick={handleApply} disabled={loading}>
-          {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
-          <span>Apply</span>
-        </Button>
       </div>
     </div>
   );
