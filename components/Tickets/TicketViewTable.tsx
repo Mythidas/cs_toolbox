@@ -220,16 +220,24 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     }
   ];
 
+  function isDstObserved() {
+    const jan = new Date(0, 1);
+    const jul = new Date(6, 1);
+    const offset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+    return new Date().getTimezoneOffset() < offset;
+  }
+
   function getTimeUntil5PMInTimezone(timezone: { state: string; shorthand: string; label: string; offset: number; }) {
     if (!timezone) {
       return 0;
     }
 
     const now = new Date();
-    const offset = timezone.offset;
-    const localTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (offset * 3600000));
-    const timeUntil5PM = new Date(localTime.getFullYear(), localTime.getMonth(), localTime.getDate(), 17, 0, 0, 0).getTime() - localTime.getTime();
-    return timeUntil5PM;
+    const targetTime = new Date(); targetTime.setUTCHours(17);
+    const offset = isDstObserved() ? (timezone.offset + 1) * -1 : timezone.offset * -1;
+    const adjustedDate = new Date(now.getTime() - (1000 * 60 * 60 * offset));
+
+    return 17 - adjustedDate.getUTCHours();
   }
 
   function getTimezoneFromState(state: string) {
@@ -243,10 +251,10 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     }
 
     const timeUntil5PM = getTimeUntil5PMInTimezone(timezoneObj);
-    if (timeUntil5PM < 1000 * 60 * 60) {
+    if (timeUntil5PM <= 1) {
       return "bg-red-500";
     }
-    if (timeUntil5PM < 1000 * 60 * 60 * 4) {
+    if (timeUntil5PM <= 4) {
       return "bg-yellow-500";
     }
     return "bg-green-500";
