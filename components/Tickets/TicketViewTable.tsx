@@ -184,13 +184,31 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "companyLocationID",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="TZ" />
+        <DataTableColumnHeader column={column} title="TZ" renderTooltip={() => {
+          return (
+            <div className="flex flex-col space-y-2">
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 my-auto rounded-full bg-green-500"></div>
+                <span>Timezone is within 8 hours of 5pm</span>
+              </div>
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 my-auto rounded-full bg-yellow-500"></div>
+                <span>Timezone is within 4 hours of 5pm</span>
+              </div>
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 my-auto rounded-full bg-red-500"></div>
+                <span>Timezone is within 1 hour of 5pm</span>
+              </div>
+            </div>
+          )
+        }} />
       ),
       cell: ({ row }) => {
         const location = view.locations.find((location) => location.id === row.original.companyLocationID);
         return (
-          <div>
-            {location ? getTimezoneFromState(location.state)?.label : ""}
+          <div className="flex space-x-2">
+            <div className={`w-3 h-3 my-auto rounded-full ${location?.state ? getTimezoneInidicatorColor(location?.state) : "hidden"}`}></div>
+            <span>{location?.state ? (getTimezoneFromState(location?.state)?.label || "N/A") : "N/A"}</span>
           </div>
         )
       },
@@ -202,8 +220,36 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     }
   ];
 
+  function getTimeUntil5PMInTimezone(timezone: { state: string; shorthand: string; label: string; offset: number; }) {
+    if (!timezone) {
+      return 0;
+    }
+
+    const now = new Date();
+    const offset = timezone.offset;
+    const localTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (offset * 3600000));
+    const timeUntil5PM = new Date(localTime.getFullYear(), localTime.getMonth(), localTime.getDate(), 17, 0, 0, 0).getTime() - localTime.getTime();
+    return timeUntil5PM;
+  }
+
   function getTimezoneFromState(state: string) {
     return TIMEZONES.find((timezone) => timezone.state.toLowerCase() === state.toLowerCase() || timezone.shorthand.toLowerCase() === state.toLowerCase());
+  }
+
+  function getTimezoneInidicatorColor(timezone: string) {
+    const timezoneObj = getTimezoneFromState(timezone);
+    if (!timezoneObj) {
+      return "hidden";
+    }
+
+    const timeUntil5PM = getTimeUntil5PMInTimezone(timezoneObj);
+    if (timeUntil5PM < 1000 * 60 * 60) {
+      return "bg-red-500";
+    }
+    if (timeUntil5PM < 1000 * 60 * 60 * 4) {
+      return "bg-yellow-500";
+    }
+    return "bg-green-500";
   }
 
   return (
