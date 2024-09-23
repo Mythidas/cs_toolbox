@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
             {renderFilter(table)}
           </div>
         )}
-        <div className="flex relative max-h-[80vh] h-fit rounded-md border overflow-auto">
+        <div className="flex relative max-h-[70vh] h-fit rounded-md border overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 bg-card">
               {table.getHeaderGroups().map((headerGroup) => (

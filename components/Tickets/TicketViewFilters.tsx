@@ -33,7 +33,6 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
   function handleChange(column: keyof AutoTaskTicketFetchParams, value: string | number | undefined) {
     setFilters((prevFilters) => {
       const newFilters = { ...prevFilters };
-      console.log(newFilters);
       if (column === "ticketNumber" || column === "title") {
         if (newFilters[column] === value) {
           newFilters[column] = undefined;

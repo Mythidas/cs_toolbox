@@ -29,9 +29,9 @@ export async function signInWithMicrosoft() {
   return redirect(redirectUrl);
 }
 
-export async function getLoggedInUser() {
+export async function getLoggedInUser(hint?: string) {
   try {
-    const { account } = await createSessionClient();
+    const { account } = await createSessionClient(hint);
     return await account.get();
   } catch (error) {
     console.error(error);

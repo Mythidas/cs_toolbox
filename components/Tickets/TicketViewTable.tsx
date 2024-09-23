@@ -26,7 +26,7 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
       ),
       cell: ({ row }) => {
         return (
-          <a href={`${AUTOTASK_TICKET_URL}${row.original.id}`} target="_blank" rel="noreferrer" className="flex space-x-1 text-primary hover:text-primary-foreground">
+          <a href={`${AUTOTASK_TICKET_URL}${row.original.id}`} target="_blank" rel="noreferrer" className="flex space-x-1 text-primary hover:text-secondary-foreground dark:hover:text-primary-foreground">
             <p>{row.original.ticketNumber}</p>
             <Link size="0.8em" className="my-auto" />
           </a>
@@ -53,7 +53,7 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
       ),
       cell: ({ row }) => {
         return (
-          <a href={`${AUTOTASK_COMPANY_URL}${row.original.companyID}`} target="_blank" rel="noreferrer" className="min-w-32 line-clamp-2 text-primary hover:text-primary-foreground">
+          <a href={`${AUTOTASK_COMPANY_URL}${row.original.companyID}`} target="_blank" rel="noreferrer" className="min-w-32 line-clamp-2 text-primary hover:text-secondary-foreground dark:hover:text-primary-foreground">
             <p>{view.companies.find((company) => company.id === row.original.companyID)?.companyName}</p>
           </a>
         )

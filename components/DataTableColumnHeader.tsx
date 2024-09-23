@@ -35,7 +35,7 @@ export function DataTableColumnHeader<TData, TValue>({
   return (
     <TooltipProvider>
       <Tooltip>
-        <div className={cn("flex items-center z-50", className)}>
+        <div className={cn("flex items-center", className)}>
           <TooltipTrigger>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -67,7 +67,7 @@ export function DataTableColumnHeader<TData, TValue>({
             </DropdownMenu>
           </TooltipTrigger>
           {renderTooltip && (
-            <TooltipContent className="bg-secondary z-[100]">{renderTooltip()}</TooltipContent>
+            <TooltipContent className="bg-secondary-foreground dark:bg-secondary text-secondary dark:text-secondary-foreground z-[1000]">{renderTooltip()}</TooltipContent>
           )}
         </div>
       </Tooltip>
