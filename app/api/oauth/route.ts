@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
     const { account } = await createAdminClient();
     const session = await account.createSession(userId, secret);
 
-
     cookies().set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
@@ -30,7 +29,7 @@ export async function GET(request: NextRequest) {
       await createUserDocument(session.userId);
     }
 
-    return NextResponse.redirect(`${request.nextUrl.origin}/`);
+    return NextResponse.redirect(`${request.nextUrl.origin}`);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });

@@ -1,10 +1,20 @@
-"use server";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { signInWithMicrosoft } from "@/lib/actions/user.action";
 import React from "react";
 
-const SignIn = async () => {
+const SignIn = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+
+    setTimeout(async () => {
+      await signInWithMicrosoft();
+    }, 1000)
+  }, [])
+
   return (
     <div className="flex size-full justify-center items-center">
       <div className="flex w-1/4 h-1/2 bg-card p-sm border-border border-[1px]">
@@ -17,7 +27,7 @@ const SignIn = async () => {
           </div>
           <div className="flex flex-col space-y-2">
             <hr />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isLoading}>
               Sign in with Microsoft
             </Button>
           </div>
