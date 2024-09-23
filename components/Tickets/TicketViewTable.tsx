@@ -74,15 +74,17 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
       accessorKey: "companyID",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Company" renderFilter={() =>
-          <ComboInput
-            defaultValue={filters.companyID ? filters.companyID.toString() : ""}
-            options={info.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
-              value: company.id.toString(),
-              label: company.companyName,
-            }))}
-            onChange={(selectedOption) => handleFilterChange("companyID", Number(selectedOption.value))}
-            placeholder="Company..."
-          />
+          <div className="w-fit">
+            <ComboInput
+              defaultValue={filters.companyID ? filters.companyID.toString() : ""}
+              options={info.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
+                value: company.id.toString(),
+                label: company.companyName,
+              }))}
+              onChange={(selectedOption) => handleFilterChange("companyID", Number(selectedOption.value))}
+              placeholder="Company..."
+            />
+          </div>
         } />
       ),
       cell: ({ row }) => {
@@ -108,15 +110,17 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
       accessorKey: "queueID",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Queue" renderFilter={() =>
-          <ComboInput
-            defaultValue={filters.queueID ? filters.queueID.toString() : ""}
-            options={info.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
-              value: _queue.value,
-              label: `${_queue.label} (${info.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
-            }))}
-            onChange={(selectedOption) => handleFilterChange("queueID", Number(selectedOption.value))}
-            placeholder="Queue..."
-          />
+          <div className="w-fit">
+            <ComboInput
+              defaultValue={filters.queueID ? filters.queueID.toString() : ""}
+              options={info.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
+                value: _queue.value,
+                label: `${_queue.label} (${info.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
+              }))}
+              onChange={(selectedOption) => handleFilterChange("queueID", Number(selectedOption.value))}
+              placeholder="Queue..."
+            />
+          </div>
         } />
       ),
       cell: ({ row }) => {
@@ -142,15 +146,17 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
       accessorKey: "assignedResourceID",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Resource" renderFilter={() =>
-          <ComboInput
-            defaultValue={filters.assignedResourceID ? filters.assignedResourceID.toString() : ""}
-            options={info.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
-              value: resource.id.toString(),
-              label: `${resource.firstName} ${resource.lastName}`,
-            }))}
-            onChange={(selectedOption) => handleFilterChange("assignedResourceID", Number(selectedOption.value))}
-            placeholder="Resource..."
-          />
+          <div className="w-fit">
+            <ComboInput
+              defaultValue={filters.assignedResourceID ? filters.assignedResourceID.toString() : ""}
+              options={info.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
+                value: resource.id.toString(),
+                label: `${resource.firstName} ${resource.lastName}`,
+              }))}
+              onChange={(selectedOption) => handleFilterChange("assignedResourceID", Number(selectedOption.value))}
+              placeholder="Resource..."
+            />
+          </div>
         } />
       ),
       cell: ({ row }) => {
@@ -178,15 +184,17 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
       accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" renderFilter={() =>
-          <ComboInput
-            defaultValue={filters.status ? filters.status.toString() : ""}
-            options={info.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
-              value: status.value,
-              label: status.label,
-            }))}
-            onChange={(selectedOption) => handleFilterChange("status", Number(selectedOption.value))}
-            placeholder="Status..."
-          />
+          <div className="w-fit">
+            <ComboInput
+              defaultValue={filters.status ? filters.status.toString() : ""}
+              options={info.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
+                value: status.value,
+                label: status.label,
+              }))}
+              onChange={(selectedOption) => handleFilterChange("status", Number(selectedOption.value))}
+              placeholder="Status..."
+            />
+          </div>
         } />
       ),
       cell: ({ row }) => {
@@ -212,15 +220,17 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
       accessorKey: "priority",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Priority" renderFilter={() =>
-          <ComboInput
-            defaultValue={filters.priority ? filters.priority.toString() : ""}
-            options={info.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
-              value: priority.value,
-              label: priority.label,
-            }))}
-            onChange={(selectedOption) => handleFilterChange("priority", Number(selectedOption.value))}
-            placeholder="Priority..."
-          />
+          <div className="w-fit">
+            <ComboInput
+              defaultValue={filters.priority ? filters.priority.toString() : ""}
+              options={info.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
+                value: priority.value,
+                label: priority.label,
+              }))}
+              onChange={(selectedOption) => handleFilterChange("priority", Number(selectedOption.value))}
+              placeholder="Priority..."
+            />
+          </div>
         } />
       ),
       cell: ({ row }) => {

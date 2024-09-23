@@ -76,8 +76,6 @@ export class AutoTaskClient extends BaseClient {
         apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "in", value: value as number[] });
       }
 
-      console.log(apiFilter);
-
       const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query`, {
         method: "POST",
         headers: {
