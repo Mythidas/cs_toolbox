@@ -189,6 +189,53 @@ type AutoTaskCompanyConfigurations = {
   userDefinedFields: AutoTaskUDF[];
 }
 
+type AutoTaskContact = {
+  id: number;
+  additionalAddressInformation: string;
+  addressLine: string;
+  addressLine1: string;
+  alternatePhone: string;
+  apiVendorID: number | null;
+  bulkEmailOptOutTime: string | null;
+  city: string;
+  companyID: number;
+  companyLocationID: number;
+  countryID: number;
+  createDate: string;
+  emailAddress: string;
+  emailAddress2: string | null;
+  emailAddress3: string | null;
+  extension: string;
+  externalID: string;
+  facebookUrl: string;
+  faxNumber: string;
+  firstName: string;
+  impersonatorCreatorResourceID: number | null;
+  isActive: boolean;
+  isOptedOutFromBulkEmail: boolean;
+  lastActivityDate: string;
+  lastModifiedDate: string;
+  lastName: string;
+  linkedInUrl: string;
+  middleInitial: string | null;
+  mobilePhone: string;
+  namePrefix: string | null;
+  nameSuffix: string | null;
+  note: string;
+  receivesEmailNotifications: boolean;
+  phone: string;
+  primaryContact: boolean;
+  roomNumber: string;
+  solicitationOptOut: boolean;
+  solicitationOptOutTime: string | null;
+  state: string;
+  surveyOptOut: boolean;
+  title: string;
+  twitterUrl: string;
+  zipCode: string;
+  userDefinedFields: AutoTaskUDF[];
+}
+
 type AutoTaskResource = {
   id: number;
   accountingReferenceID: string;

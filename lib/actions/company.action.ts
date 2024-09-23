@@ -56,6 +56,17 @@ export async function getCompanyConfigurations(companyId: number) {
   }
 }
 
+export async function getCompanyContacts(companyId: number) {
+  try {
+    const client = new AutoTaskClient();
+    const contacts = await client.getContacts(companyId);
+    return contacts;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 // ================= DATABASE =================
 
 export async function generateCompanyDocuments() {

@@ -14,9 +14,10 @@ import FormFieldInput from "../FormFieldInput";
 import SelectInput from "../SelectInput";
 import { Textarea } from "../ui/textarea";
 import MultiComboInput from "../MultiComboInput";
+import ComboInput from "../ComboInput";
 
 const formSchema = z.object({
-  email: z.string(),
+  contact: z.string(),
   userFirstName: z.string(),
   userLastName: z.string(),
   location: z.string(),
@@ -33,9 +34,10 @@ const formSchema = z.object({
 interface NewUserFormProps {
   company: AutoTaskCompany;
   software: string[];
+  contacts: AutoTaskContact[];
 }
 
-const NewUserForm = ({ company, software }: NewUserFormProps) => {
+const NewUserForm = ({ company, software, contacts }: NewUserFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +56,7 @@ const NewUserForm = ({ company, software }: NewUserFormProps) => {
           <h1 className="text-center text-2xl font-semibold">
             {company.companyName}
           </h1>
-          <FormFieldInput control={form.control} name="email" label="Email *" renderInput={(field) => <Input type="email" {...field} value={typeof field.value === 'boolean' ? '' : field.value} placeholder="Enter your email..." />} />
+          <FormFieldInput control={form.control} name="contact" label="Contact *" renderInput={(field) => <ComboInput placeholder="Select Contact..." options={contacts.map((option) => { return { label: `${option.firstName} ${option.lastName}`, value: option.id.toString() } })} onChange={(option) => field.onChange({ target: { value: option.value } })} />} />
           <hr />
           <div className="flex flex-col w-full px-sm space-y-4 overflow-y-auto">
             <div className="flex w-full space-x-2">

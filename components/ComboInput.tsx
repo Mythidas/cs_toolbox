@@ -27,8 +27,6 @@ interface ComboInputProps {
 }
 
 const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInputProps) => {
-  const COMBO_WIDTH = 260;
-
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(defaultValue || "");
 
@@ -43,7 +41,7 @@ const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInput
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-[${COMBO_WIDTH}px] justify-between border-none bg-accent hover:bg-accent-foreground hover:text-muted`}
+          className={`w-full justify-between border-none bg-accent hover:bg-accent-foreground hover:text-muted`}
         >
           {value
             ? options.find((_option) => _option.value === value)?.label
@@ -51,7 +49,7 @@ const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInput
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={`w-[${COMBO_WIDTH}px] p-0`}>
+      <PopoverContent className={`w-full p-0`}>
         <Command>
           <CommandInput placeholder={placeholder || "Search options..."} />
           <CommandList>
