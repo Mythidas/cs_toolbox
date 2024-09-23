@@ -27,7 +27,7 @@ interface MultiComboInputProps {
   onChange?: (selected: string[]) => void;
 }
 
-const MultiComboInput = ({ options, placeholder = "items", defaultValues, onChange }: MultiComboInputProps) => {
+const MultiComboInput = ({ options, placeholder = "items", onChange }: MultiComboInputProps) => {
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<string[]>([]);
 

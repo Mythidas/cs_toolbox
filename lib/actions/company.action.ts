@@ -2,8 +2,7 @@
 
 import { AutoTaskClient } from "../autotask";
 import { VSAXClient } from "../vsax";
-import { ID, OAuthProvider, Query } from "node-appwrite";
-import { parseStringify } from "../utils";
+import { ID, Query } from "node-appwrite";
 import { createAdminClient } from "../appwrite";
 
 const {

@@ -1,6 +1,6 @@
 import DeviceHeader from "@/components/Devices/DeviceHeader";
 import DeviceView from "@/components/Devices/DeviceView";
-import { getVSASite, getVSASites } from "@/lib/actions/site.action";
+import { getVSASite, getVSASites } from "@/lib/actions/company.action";
 import React from "react";
 
 const Devices = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {

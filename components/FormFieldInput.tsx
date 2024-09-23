@@ -1,11 +1,10 @@
 import React from 'react'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
-import { Input } from "./ui/input";
 import { Control, ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
 interface FormFieldInputProps<T extends FieldValues> {
-  control: Control<T, any>;
+  control: Control<T, unknown>;
   name: Path<T>;
   label: string;
   renderInput: (field: ControllerRenderProps<T, Path<T>>) => React.ReactNode;

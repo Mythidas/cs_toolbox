@@ -24,7 +24,7 @@ function SelectInput({ options, label, ...props }: SelectInputProps) {
       <SelectContent>
         <SelectGroup>
           {options.map((option) => {
-            return <SelectItem value={option.value}>{option.label}</SelectItem>
+            return <SelectItem key={option.label} value={option.value}>{option.label}</SelectItem>
           })}
         </SelectGroup>
       </SelectContent>

@@ -3,7 +3,7 @@ import NewUserForm from "@/components/Forms/NewUserForm";
 import { getAutoTaskSites, getCompanyConfigurations, getCompanyDocument } from "@/lib/actions/company.action";
 import React from "react";
 
-const Forms = async ({ params, searchParams }: { params: { customerId: string }, searchParams?: { [key: string]: string | string[] | undefined } }) => {
+const Forms = async ({ params }: { params: { customerId: string }, searchParams?: { [key: string]: string | string[] | undefined } }) => {
   const companyDocument = await getCompanyDocument(params.customerId);
 
   const autotaskCompanies = await getAutoTaskSites();
