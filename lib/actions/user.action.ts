@@ -1,7 +1,6 @@
 "use server";
 
 import { createAdminClient, createSessionClient } from "@/lib/appwrite";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ID, OAuthProvider, Query } from "node-appwrite";
 import { parseStringify } from "../utils";
@@ -9,23 +8,23 @@ import { parseStringify } from "../utils";
 const {
   APPWRITE_DATABASE_ID,
   APPWRITE_USER_COLLECTION,
+  NEXT_PUBLIC_ORIGIN
 } = process.env;
 
 // =================== AUTH ===================
 
 export async function signInWithMicrosoft() {
   const { account } = await createAdminClient();
-  const origin = headers().get("origin");
 
-  console.log(`[${origin}] Signing in with Microsoft...`);
+  console.log(`[${NEXT_PUBLIC_ORIGIN}] Signing in with Microsoft...`);
 
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Microsoft,
-    `${origin}/api/oauth`,
-    `${origin}/`
+    `${NEXT_PUBLIC_ORIGIN}/api/oauth`,
+    `${NEXT_PUBLIC_ORIGIN}/`
   );
 
-  console.log(`[${origin}] Redirecting to: ${redirectUrl}. Fallback to / if not redirected. Proceed to /api/oauth if redirected.`);
+  console.log(`[${NEXT_PUBLIC_ORIGIN}] Redirecting to: ${redirectUrl}. Fallback to / if not redirected. Proceed to /api/oauth if redirected.`);
 
   return redirect(redirectUrl);
 }
