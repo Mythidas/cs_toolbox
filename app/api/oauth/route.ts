@@ -3,6 +3,10 @@ import { createAdminClient } from "@/lib/appwrite";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+const {
+  NEXT_PUBLIC_ORIGIN
+} = process.env;
+
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
@@ -29,7 +33,7 @@ export async function GET(request: NextRequest) {
       await createUserDocument(session.userId);
     }
 
-    return NextResponse.redirect(`${request.nextUrl.origin}`);
+    return NextResponse.redirect(`${NEXT_PUBLIC_ORIGIN}`);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
