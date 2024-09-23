@@ -11,6 +11,11 @@ type UserDocument = {
 
 // =============== AutoTask ===============
 
+type AutoTaskUDF = {
+  name: string;
+  value: string;
+}
+
 type AutoTaskTicket = {
   id: number;
   apiVendorID: number;
@@ -87,10 +92,7 @@ type AutoTaskTicket = {
   ticketNumber: string;
   ticketType: number;
   title: string;
-  userDefinedFields: {
-    name: string;
-    value: string;
-  }[];
+  userDefinedFields: AutoTaskUDF[];
 }
 
 type AutoTaskCompany = {
@@ -153,10 +155,7 @@ type AutoTaskCompany = {
   taxRegionID: number;
   territoryID: number;
   webAddress: string | null;
-  userDefinedFields: {
-    name: string;
-    value: string;
-  }[];
+  userDefinedFields: AutoTaskUDF[];
 };
 
 type AutoTaskCompanyLocation = {
@@ -180,10 +179,14 @@ type AutoTaskCompanyLocation = {
   roundtripDistance: number;
   state: string;
   taxRegionID: number;
-  userDefinedFields: {
-    name: string;
-    value: string;
-  }[];
+  userDefinedFields: AutoTaskUDF[];
+}
+
+type AutoTaskCompanyConfigurations = {
+  id: number;
+  companyID: number;
+  locationName: string;
+  userDefinedFields: AutoTaskUDF[];
 }
 
 type AutoTaskResource = {

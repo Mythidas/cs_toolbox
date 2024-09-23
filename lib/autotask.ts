@@ -208,6 +208,37 @@ export class AutoTaskClient extends BaseClient {
     }
   }
 
+  async getCompanyConfigurations(companyId: number) {
+    try {
+      const apiFilter: AutoTaskAPIFilter<AutoTaskCompanyConfigurations> = {
+        Filter: [
+          { field: "companyID", op: "eq", value: companyId },
+        ],
+      };
+
+      const companyConfigurationsFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/CompanySiteConfigurations/query?search=${JSON.stringify(apiFilter)}`, {
+        method: "GET",
+        headers: {
+          "APIIntegrationcode": NEXT_PUBLIC_AUTOTASK_TRACKER!,
+          "UserName": NEXT_AUTOTASK_USER_ID!,
+          "Secret": NEXT_AUTOTASK_SECRET!,
+          "Content-Type": "application/json"
+        },
+        cache: "force-cache",
+      });
+
+      if (!companyConfigurationsFetch.ok) {
+        this._throw(companyConfigurationsFetch.statusText);
+      }
+
+      const companyConfigurationData = await companyConfigurationsFetch.json();
+      return companyConfigurationData.items[0] as AutoTaskCompanyConfigurations;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   // =============== Helpers ===============
 
   private async getTicketFieldValue(field: keyof AutoTaskTicket, label: string) {
