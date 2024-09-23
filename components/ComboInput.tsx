@@ -47,13 +47,13 @@ const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInput
         >
           {value
             ? options.find((_option) => _option.value === value)?.label
-            : `Select ${placeholder?.toLowerCase() || "option"}...`}
+            : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className={`w-[${COMBO_WIDTH}px] p-0`}>
         <Command>
-          <CommandInput placeholder={`Search ${placeholder?.toLowerCase() || "option"}...`} />
+          <CommandInput placeholder={placeholder || "Search options..."} />
           <CommandList>
             <CommandEmpty>No {placeholder || "option"} found.</CommandEmpty>
             <CommandGroup>

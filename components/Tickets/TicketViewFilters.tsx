@@ -157,6 +157,13 @@ const TicketViewFilters = ({ info, params, views }: TicketViewFiltersProps) => {
             placeholder="Priority"
           />
         </div>
+        <Input
+          placeholder="Search Title..."
+          type="date"
+          value={filters.title ?? ""}
+          onChange={(event) => handleChange("title", event.target.value)}
+          className="w-fit"
+        />
         <Button onClick={handleApply} disabled={loading}>
           {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
           <span>Apply</span>

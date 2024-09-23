@@ -20,12 +20,14 @@ interface DataTableColumnHeaderProps<TData, TValue>
   column: Column<TData, TValue>;
   title: string;
   renderTooltip?: () => React.ReactNode;
+  renderFilter?: () => React.ReactNode;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   renderTooltip,
+  renderFilter,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
@@ -35,14 +37,14 @@ export function DataTableColumnHeader<TData, TValue>({
   return (
     <TooltipProvider>
       <Tooltip>
-        <div className={cn("flex items-center", className)}>
+        <div className={cn("flex flex-col items-start", className)}>
           <TooltipTrigger>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 px-2 my-2 -ml-1 border-white"
+                  className="h-8 px-2 my-2 border-white"
                 >
                   <span>{title}</span>
                   {column.getIsSorted() === "desc" ? (
@@ -70,6 +72,11 @@ export function DataTableColumnHeader<TData, TValue>({
             <TooltipContent className="bg-secondary-foreground dark:bg-secondary text-secondary dark:text-secondary-foreground z-[1000]">{renderTooltip()}</TooltipContent>
           )}
         </div>
+        {renderFilter && (
+          <div className="pb-sm">
+            {renderFilter()}
+          </div>
+        )}
       </Tooltip>
     </TooltipProvider>
   )

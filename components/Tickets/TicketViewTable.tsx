@@ -5,7 +5,13 @@ import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/DataTable";
 import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
 import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL, TIMEZONES } from "@/constants";
-import { Link } from "lucide-react";
+import { Link, Loader } from "lucide-react";
+import ComboInput from "../ComboInput";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { DateInput } from "../DateInput";
 
 export interface TicketViewProps {
   tickets: AutoTaskTicket[];
@@ -15,14 +21,25 @@ export interface TicketViewProps {
   priorities: AutoTaskFieldValue[];
   resources: AutoTaskResource[];
   locations: AutoTaskCompanyLocation[];
+  params: AutoTaskTicketFetchParams;
+  views: Option[];
 }
 
-const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
+const URL_TIMEOUT = 10000;
+
+const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
   const columns: ColumnDef<AutoTaskTicket>[] = [
     {
       accessorKey: "ticketNumber",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Ticket Number" />
+        <DataTableColumnHeader column={column} title="Ticket Number" renderFilter={() =>
+          <Input
+            placeholder="Ticket Number..."
+            value={filters.ticketNumber ?? ""}
+            onChange={(event) => handleFilterChange("ticketNumber", event.target.value)}
+            className="w-fit max-w-36"
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
@@ -36,7 +53,14 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "title",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Title" />
+        <DataTableColumnHeader column={column} title="Title" renderFilter={() =>
+          <Input
+            placeholder="Title..."
+            value={filters.ticketNumber ?? ""}
+            onChange={(event) => handleFilterChange("title", event.target.value)}
+            className="w-full"
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
@@ -49,18 +73,28 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "companyID",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Company" />
+        <DataTableColumnHeader column={column} title="Company" renderFilter={() =>
+          <ComboInput
+            defaultValue={filters.companyID ? filters.companyID.toString() : ""}
+            options={info.companies.sort((a, b) => a.companyName.localeCompare(b.companyName)).map((company) => ({
+              value: company.id.toString(),
+              label: company.companyName,
+            }))}
+            onChange={(selectedOption) => handleFilterChange("companyID", Number(selectedOption.value))}
+            placeholder="Company..."
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
           <a href={`${AUTOTASK_COMPANY_URL}${row.original.companyID}`} target="_blank" rel="noreferrer" className="min-w-32 line-clamp-2 text-primary hover:text-secondary-foreground dark:hover:text-primary-foreground">
-            <p>{view.companies.find((company) => company.id === row.original.companyID)?.companyName}</p>
+            <p>{info.companies.find((company) => company.id === row.original.companyID)?.companyName}</p>
           </a>
         )
       },
       sortingFn: (a, b) => {
-        const companyA = view.companies.find((company) => company.id === a.original.companyID);
-        const companyB = view.companies.find((company) => company.id === b.original.companyID);
+        const companyA = info.companies.find((company) => company.id === a.original.companyID);
+        const companyB = info.companies.find((company) => company.id === b.original.companyID);
         if (companyA && companyB) {
           return companyA.companyName.localeCompare(companyB.companyName);
         }
@@ -73,18 +107,28 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "queueID",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Queue" />
+        <DataTableColumnHeader column={column} title="Queue" renderFilter={() =>
+          <ComboInput
+            defaultValue={filters.queueID ? filters.queueID.toString() : ""}
+            options={info.queues.sort((a, b) => a.label.localeCompare(b.label)).map((_queue) => ({
+              value: _queue.value,
+              label: `${_queue.label} (${info.tickets.filter(ticket => ticket.queueID === Number(_queue.value)).length})`,
+            }))}
+            onChange={(selectedOption) => handleFilterChange("queueID", Number(selectedOption.value))}
+            placeholder="Queue..."
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
           <div>
-            {view.queues.find((queue) => Number(queue.value) === row.original.queueID)?.label}
+            {info.queues.find((queue) => Number(queue.value) === row.original.queueID)?.label}
           </div>
         )
       },
       sortingFn: (a, b) => {
-        const queueA = view.queues.find((queue) => Number(queue.value) === a.original.queueID);
-        const queueB = view.queues.find((queue) => Number(queue.value) === b.original.queueID);
+        const queueA = info.queues.find((queue) => Number(queue.value) === a.original.queueID);
+        const queueB = info.queues.find((queue) => Number(queue.value) === b.original.queueID);
         if (queueA && queueB) {
           return queueA.label.localeCompare(queueB.label);
         }
@@ -97,10 +141,20 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "assignedResourceID",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Resource" />
+        <DataTableColumnHeader column={column} title="Resource" renderFilter={() =>
+          <ComboInput
+            defaultValue={filters.assignedResourceID ? filters.assignedResourceID.toString() : ""}
+            options={info.resources.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)).map((resource) => ({
+              value: resource.id.toString(),
+              label: `${resource.firstName} ${resource.lastName}`,
+            }))}
+            onChange={(selectedOption) => handleFilterChange("assignedResourceID", Number(selectedOption.value))}
+            placeholder="Resource..."
+          />
+        } />
       ),
       cell: ({ row }) => {
-        const resource = view.resources.find((resource) => resource.id === row.original.assignedResourceID);
+        const resource = info.resources.find((resource) => resource.id === row.original.assignedResourceID);
 
         return (
           <div className="text-nowrap">
@@ -109,8 +163,8 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
         )
       },
       sortingFn: (a, b) => {
-        const resourceA = view.resources.find((resource) => resource.id === a.original.assignedResourceID);
-        const resourceB = view.resources.find((resource) => resource.id === b.original.assignedResourceID);
+        const resourceA = info.resources.find((resource) => resource.id === a.original.assignedResourceID);
+        const resourceB = info.resources.find((resource) => resource.id === b.original.assignedResourceID);
         if (resourceA && resourceB) {
           return `${resourceA.firstName} ${resourceA.lastName}`.localeCompare(`${resourceB.firstName} ${resourceB.lastName}`);
         }
@@ -123,18 +177,28 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "status",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Status" renderFilter={() =>
+          <ComboInput
+            defaultValue={filters.status ? filters.status.toString() : ""}
+            options={info.statuses.sort((a, b) => a.label.localeCompare(b.label)).map((status) => ({
+              value: status.value,
+              label: status.label,
+            }))}
+            onChange={(selectedOption) => handleFilterChange("status", Number(selectedOption.value))}
+            placeholder="Status..."
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
           <div className="min-w-28">
-            {view.statuses.find((status) => Number(status.value) === row.original.status)?.label}
+            {info.statuses.find((status) => Number(status.value) === row.original.status)?.label}
           </div>
         )
       },
       sortingFn: (a, b) => {
-        const statusA = view.statuses.find((status) => Number(status.value) === a.original.status);
-        const statusB = view.statuses.find((status) => Number(status.value) === b.original.status);
+        const statusA = info.statuses.find((status) => Number(status.value) === a.original.status);
+        const statusB = info.statuses.find((status) => Number(status.value) === b.original.status);
         if (statusA && statusB) {
           return statusA.label.localeCompare(statusB.label);
         }
@@ -147,18 +211,28 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "priority",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Priority" />
+        <DataTableColumnHeader column={column} title="Priority" renderFilter={() =>
+          <ComboInput
+            defaultValue={filters.priority ? filters.priority.toString() : ""}
+            options={info.priorities.sort((a, b) => a.label.localeCompare(b.label)).map((priority) => ({
+              value: priority.value,
+              label: priority.label,
+            }))}
+            onChange={(selectedOption) => handleFilterChange("priority", Number(selectedOption.value))}
+            placeholder="Priority..."
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
           <div>
-            {view.priorities.find((priority) => Number(priority.value) === row.original.priority)?.label}
+            {info.priorities.find((priority) => Number(priority.value) === row.original.priority)?.label}
           </div>
         )
       },
       sortingFn: (a, b) => {
-        const priorityA = view.priorities.find((priority) => Number(priority.value) === a.original.priority);
-        const priorityB = view.priorities.find((priority) => Number(priority.value) === b.original.priority);
+        const priorityA = info.priorities.find((priority) => Number(priority.value) === a.original.priority);
+        const priorityB = info.priorities.find((priority) => Number(priority.value) === b.original.priority);
         if (priorityA && priorityB) {
           return priorityA.label.localeCompare(priorityB.label);
         }
@@ -171,7 +245,19 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     {
       accessorKey: "lastActivityDate",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Last Activity" />
+        <DataTableColumnHeader column={column} title="Last Activity" renderFilter={() =>
+          <DateInput
+            placeholder="Date"
+            value={filters.lastActivityDate}
+            onChange={(value) => {
+              if (value) {
+                value.setHours(0);
+                value.setMinutes(0);
+              }
+              handleFilterChange("lastActivityDate", value)
+            }}
+          />
+        } />
       ),
       cell: ({ row }) => {
         return (
@@ -193,18 +279,18 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
               </div>
               <div className="flex space-x-2">
                 <div className="w-3 h-3 my-auto rounded-full bg-yellow-500"></div>
-                <span>Timezone is within 4 hours of 5pm</span>
+                <span>Timezone is within 2 hours of 5pm</span>
               </div>
               <div className="flex space-x-2">
                 <div className="w-3 h-3 my-auto rounded-full bg-red-500"></div>
-                <span>Timezone is within 1 hour of 5pm</span>
+                <span>Timezone is after 5pm</span>
               </div>
             </div>
           )
         }} />
       ),
       cell: ({ row }) => {
-        const location = view.locations.find((location) => location.id === row.original.companyLocationID);
+        const location = info.locations.find((location) => location.id === row.original.companyLocationID);
         return (
           <div className="flex space-x-2">
             <div className={`w-3 h-3 my-auto rounded-full ${location?.state ? getTimezoneInidicatorColor(location?.state) : "hidden"}`}></div>
@@ -213,12 +299,88 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
         )
       },
       sortingFn: (a, b) => {
-        const offsetA = getTimezoneFromState(view.locations.find((location) => location.id === a.original.companyLocationID)?.state || "")?.offset || 0;
-        const offsetB = getTimezoneFromState(view.locations.find((location) => location.id === b.original.companyLocationID)?.state || "")?.offset || 0;
+        const offsetA = getTimezoneFromState(info.locations.find((location) => location.id === a.original.companyLocationID)?.state || "")?.offset || 0;
+        const offsetB = getTimezoneFromState(info.locations.find((location) => location.id === b.original.companyLocationID)?.state || "")?.offset || 0;
         return offsetA - offsetB;
       }
     }
   ];
+
+  const [filters, setFilters] = React.useState<AutoTaskTicketFetchParams>(info.params);
+  const [loading, setLoading] = React.useState(false);
+
+  const { replace } = useRouter();
+  const pathname = usePathname();
+
+
+  React.useEffect(() => {
+    setLoading(false);
+    setFilters(info.params);
+  }, [info.params]);
+
+  function handleFilterChange(column: keyof AutoTaskTicketFetchParams, value: string | number | Date | undefined) {
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters };
+      if (column === "ticketNumber" || column === "title") {
+        if (newFilters[column] === value) {
+          newFilters[column] = undefined;
+          return newFilters;
+        }
+
+        newFilters[column] = value as string;
+      }
+      if (column === "companyID" || column === "queueID" || column === "assignedResourceID" || column === "status" || column === "priority") {
+        if (newFilters[column]?.includes(value as number)) {
+          newFilters[column] = newFilters[column]?.filter((item) => item !== value);
+          return newFilters;
+        }
+
+        newFilters[column] = [value as number];
+      }
+      if (column === "lastActivityDate") {
+        newFilters[column] = value as Date;
+      }
+
+      return newFilters;
+    });
+  }
+
+  function handleApplyFilters() {
+    setLoading(true);
+    const urlParams = convertFiltersToURLParams(filters);
+    replace(`${pathname}${urlParams}`);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, URL_TIMEOUT);
+  }
+
+  function handleViewChange(option: Option) {
+    setLoading(true);
+    replace(`${pathname}${option.value}`);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, URL_TIMEOUT);
+  }
+
+  function convertFiltersToURLParams(filters: AutoTaskTicketFetchParams): string {
+    return Object.entries(filters).reduce((acc, [key, value]) => {
+      if (value === null || value === undefined) {
+        return acc;
+      }
+
+      if (Array.isArray(value)) {
+        return `${acc}${value.map((_val) => `${key}=${_val}`).join("&")}&`;
+      }
+
+      if (key === "lastActivityDate") {
+        return `${acc}${key}=${(value as Date).toISOString()}&`;
+      }
+
+      return `${acc}${key}=${value}&`;
+    }, "?").slice(0, -1);
+  }
 
   function isDstObserved() {
     const jan = new Date(0, 1);
@@ -251,17 +413,33 @@ const TicketViewTable = ({ view }: { view: TicketViewProps }) => {
     }
 
     const timeUntil5PM = getTimeUntil5PMInTimezone(timezoneObj);
-    if (timeUntil5PM <= 1) {
+    if (timeUntil5PM <= 0) {
       return "bg-red-500";
     }
-    if (timeUntil5PM <= 4) {
+    if (timeUntil5PM <= 2) {
       return "bg-yellow-500";
     }
     return "bg-green-500";
   }
 
   return (
-    <DataTable data={view.tickets} columns={columns} paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
+    <div className="flex flex-col size-full">
+      <div className="flex w-full justify-end pb-sm">
+        <div className="flex space-x-2">
+          <Button onClick={handleApplyFilters} disabled={loading}>
+            {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
+            Apply Filters
+          </Button>
+          <ComboInput
+            defaultValue={info.views.find((view) => view.value === convertFiltersToURLParams(info.params))?.value || undefined}
+            options={info.views}
+            onChange={handleViewChange}
+            placeholder="Views"
+          />
+        </div>
+      </div>
+      <DataTable data={info.tickets} columns={columns} paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
+    </div>
   )
 }
 

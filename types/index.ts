@@ -262,6 +262,7 @@ type AutoTaskTicketFetchParams = {
   assignedResourceID?: number[];
   status?: number[];
   priority?: number[];
+  lastActivityDate?: Date;
 }
 
 // =============== VSAX ===============

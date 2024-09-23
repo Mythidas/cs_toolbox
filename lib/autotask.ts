@@ -54,20 +54,29 @@ export class AutoTaskClient extends BaseClient {
       }
 
       for (const [key, value] of Object.entries(params)) {
-        if (key === "completed" || key === "status" || typeof value === "boolean") {
+        if (key === "completed" || key === "status" || typeof value === "boolean" || !value) {
+          continue;
+        }
+
+        if (key === "lastActivityDate") {
+          const dateValue = (value as Date).toISOString().split('T')[0];
+          const nextDateValue = new Date(dateValue);
+          nextDateValue.setDate(nextDateValue.getDate() + 1);
+          const nextDateString = nextDateValue.toISOString().split('T')[0];
+          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "lt", value: nextDateString });
+          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "gte", value: dateValue });
           continue;
         }
 
         if (key === "ticketNumber" || key === "title") {
-          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "contains", value: value });
+          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "contains", value: value as string });
           continue;
         }
 
-        if (value) {
-          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "in", value: value });
-        }
+        apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "in", value: value as number[] });
       }
 
+      console.log(apiFilter);
 
       const ticketFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Tickets/query`, {
         method: "POST",
