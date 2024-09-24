@@ -7,6 +7,8 @@ import React from "react";
 
 const Tickets = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
   const loggedInUser = await getLoggedInUser();
+  if (!loggedInUser) redirect("/sign-in");
+
   const resources = await getTicketResources();
 
   if (!searchParams || Object.keys(searchParams).length === 0) {

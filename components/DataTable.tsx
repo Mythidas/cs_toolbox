@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className={`flex flex-col ${height ? height : "h-full"} justify-between gap-sm`}>
       <div className="flex flex-col h-[95%] overflow-auto">
-        <div className="flex flex-grow relative rounded-md border overflow-auto">
+        <div className="flex relative rounded-md border overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 bg-card">
               {table.getHeaderGroups().map((headerGroup) => (

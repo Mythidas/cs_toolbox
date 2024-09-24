@@ -4,7 +4,7 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/DataTable";
 import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
-import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL, TIMEZONES } from "@/constants";
+import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL, convertFiltersToURLParams, TIMEZONES } from "@/constants";
 import { Link, Loader } from "lucide-react";
 import ComboInput from "../ComboInput";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { DateInput } from "../DateInput";
 import TicketActions from "./TicketActions";
+import SelectInput from "../SelectInput";
 
 export interface TicketViewProps {
   tickets: AutoTaskTicket[];
@@ -36,7 +37,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
         <DataTableColumnHeader column={column} title="Ticket Number" renderFilter={() =>
           <Input
             placeholder="Ticket Number..."
-            value={filters.ticketNumber ?? ""}
+            defaultValue={filters.ticketNumber ?? ""}
             onChange={(event) => handleFilterChange("ticketNumber", event.target.value)}
             className="w-fit max-w-36"
           />
@@ -57,7 +58,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
         <DataTableColumnHeader column={column} title="Title" renderFilter={() =>
           <Input
             placeholder="Title..."
-            value={filters.title ?? ""}
+            defaultValue={filters.title ?? ""}
             onChange={(event) => handleFilterChange("title", event.target.value)}
             className="w-full"
           />
@@ -330,30 +331,25 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
   }, [info.params]);
 
   function handleFilterChange(column: keyof AutoTaskTicketFetchParams, value: string | number | Date | undefined) {
-    setFilters((prevFilters) => {
-      const newFilters = { ...prevFilters };
-      if (column === "ticketNumber" || column === "title") {
-        if (newFilters[column] === value) {
-          newFilters[column] = undefined;
-          return newFilters;
-        }
-
-        newFilters[column] = value as string;
-      }
-      if (column === "companyID" || column === "queueID" || column === "assignedResourceID" || column === "status" || column === "priority") {
-        if (newFilters[column]?.includes(value as number)) {
-          newFilters[column] = newFilters[column]?.filter((item) => item !== value);
-          return newFilters;
-        }
-
-        newFilters[column] = [value as number];
-      }
-      if (column === "lastActivityDate") {
-        newFilters[column] = value as Date;
+    if (column === "ticketNumber" || column === "title") {
+      if (filters[column] === value) {
+        filters[column] = undefined;
+        return filters;
       }
 
-      return newFilters;
-    });
+      filters[column] = value as string;
+    }
+    if (column === "companyID" || column === "queueID" || column === "assignedResourceID" || column === "status" || column === "priority") {
+      if (filters[column]?.includes(value as number)) {
+        filters[column] = filters[column]?.filter((item) => item !== value);
+        return filters;
+      }
+
+      filters[column] = [value as number];
+    }
+    if (column === "lastActivityDate") {
+      filters[column] = value as Date;
+    }
   }
 
   function handleApplyFilters() {
@@ -366,31 +362,31 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
     }, URL_TIMEOUT);
   }
 
+  function handleClearFilters() {
+    setFilters({
+      completed: true,
+      ticketNumber: undefined,
+      title: undefined,
+      companyID: undefined,
+      queueID: undefined,
+      assignedResourceID: undefined,
+      status: undefined,
+      priority: undefined,
+      lastActivityDate: undefined,
+    })
+  }
+
   function handleViewChange(option: Option) {
+    if (option.value === convertFiltersToURLParams(filters)) {
+      return;
+    }
+
     setLoading(true);
     replace(`${pathname}${option.value}`);
 
     setTimeout(() => {
       setLoading(false);
     }, URL_TIMEOUT);
-  }
-
-  function convertFiltersToURLParams(filters: AutoTaskTicketFetchParams): string {
-    return Object.entries(filters).reduce((acc, [key, value]) => {
-      if (value === null || value === undefined) {
-        return acc;
-      }
-
-      if (Array.isArray(value)) {
-        return `${acc}${value.map((_val) => `${key}=${_val}`).join("&")}&`;
-      }
-
-      if (key === "lastActivityDate") {
-        return `${acc}${key}=${(value as Date).toISOString()}&`;
-      }
-
-      return `${acc}${key}=${value}&`;
-    }, "?").slice(0, -1);
   }
 
   function isDstObserved() {
@@ -442,11 +438,18 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
             {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
             Apply Filters
           </Button>
-          <ComboInput
+          <Button onClick={handleClearFilters} disabled={loading} variant="destructive">
+            {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
+            Clear Filters
+          </Button>
+          <SelectInput
             defaultValue={info.views.find((view) => view.value === convertFiltersToURLParams(info.params))?.value || undefined}
             options={info.views}
-            onChange={handleViewChange}
-            placeholder="Views"
+            onValueChange={(value: string) => {
+              const option = info.views.find((view) => view.value === value) || { label: "", value };
+              handleViewChange(option);
+            }}
+            label="View"
           />
         </div>
       </div>

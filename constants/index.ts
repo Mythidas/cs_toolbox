@@ -16,9 +16,31 @@ export const NAV_LINKS = [
   // },
 ];
 
+// =================== AUTOTASK =========================
+
 export const AUTOTASK_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/TicketDetail.mvc?workspace=False&ticketId=";
 export const AUTOTASK_NEW_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/TicketNew.mvc/Create?categoryId=3";
 export const AUTOTASK_COMPANY_URL = "https://ww15.autotask.net/Mvc/CRM/AccountDetail.mvc?accountId=";
+
+export function convertFiltersToURLParams(filters: AutoTaskTicketFetchParams): string {
+  return Object.entries(filters).reduce((acc, [key, value]) => {
+    if (value === null || value === undefined) {
+      return acc;
+    }
+
+    if (Array.isArray(value)) {
+      return `${acc}${value.map((_val) => `${key}=${_val}`).join("&")}&`;
+    }
+
+    if (key === "lastActivityDate") {
+      return `${acc}${key}=${(value as Date).toISOString()}&`;
+    }
+
+    return `${acc}${key}=${value}&`;
+  }, "?").slice(0, -1);
+}
+
+// =================== MISC =========================
 
 export const TIMEZONES = [
   { state: "Arizona", shorthand: "AZ", label: "MST", offset: -7 },
