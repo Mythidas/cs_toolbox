@@ -1,4 +1,3 @@
-import TicketActions from "@/components/Tickets/TicketActions";
 import TicketView from "@/components/Tickets/TicketView";
 import TicketViewSkeleton from "@/components/Tickets/TicketViewSkeleton";
 import { getTicketResources } from "@/lib/actions/ticket.action";
@@ -20,7 +19,6 @@ const Tickets = async ({ searchParams }: { searchParams?: { [key: string]: strin
 
   return (
     <div className="flex size-full justify-between space-x-2">
-      <TicketActions />
       <div className="flex flex-col w-full h-full p-sm card">
         <React.Suspense fallback={<TicketViewSkeleton />}>
           <TicketView searchParams={searchParams} />

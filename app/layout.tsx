@@ -25,7 +25,7 @@ export default function GlobalLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${ibmPlexSerif.variable} w-screen h-screen`}>
+      <body className={`${inter.variable} ${ibmPlexSerif.variable} w-screen h-screen overflow-clip`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>

@@ -13,7 +13,7 @@ const Navbar = async () => {
   const loggedInUser = await getLoggedInUser();
 
   return (
-    <NavigationMenu className="flex max-w-full w-full justify-between p-2 shadow-md dark:shadow-none z-10">
+    <NavigationMenu className="flex w-full h-[5%] max-w-full justify-between p-sm shadow-md dark:shadow-none z-10">
       <div className="flex px-sm gap-sm">
         <Link href="/" className="px-sm">
           <Image src="/icons/toolbox.png" alt="toolbox logo" width={36} height={36} />

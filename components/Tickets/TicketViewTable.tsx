@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { DateInput } from "../DateInput";
+import TicketActions from "./TicketActions";
 
 export interface TicketViewProps {
   tickets: AutoTaskTicket[];
@@ -433,8 +434,9 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
   }
 
   return (
-    <div className="flex flex-col size-full">
-      <div className="flex w-full justify-end pb-sm">
+    <div className="flex flex-col size-full space-y-2 overflow-hidden">
+      <div className="flex h-[5%] w-full justify-between">
+        <TicketActions />
         <div className="flex space-x-2">
           <Button onClick={handleApplyFilters} disabled={loading}>
             {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
@@ -448,7 +450,8 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
           />
         </div>
       </div>
-      <DataTable data={info.tickets} columns={columns} paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
+      <hr />
+      <DataTable data={info.tickets} columns={columns} height="h-[94%]" paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
     </div>
   )
 }

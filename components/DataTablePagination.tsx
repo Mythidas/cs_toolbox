@@ -24,9 +24,9 @@ export function DataTablePagination<TData>({
   const [refreshTimerCount, setRefreshTimerCount] = React.useState(refreshInterval || null);
   const router = useRouter();
 
-  // Set the page size to 20 when the component mounts
+  // Set the page size to 100 when the component mounts
   React.useEffect(() => {
-    table.setPageSize(50)
+    table.setPageSize(100)
   }, [])
 
   React.useEffect(() => {
@@ -49,7 +49,7 @@ export function DataTablePagination<TData>({
   }, [refreshTimerCount])
 
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex w-full items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground space-x-6">
         <span>{table.getFilteredRowModel().rows.length} {tag || "row"}(s)</span>
         {refreshInterval && refreshTimerCount ? (
@@ -73,7 +73,7 @@ export function DataTablePagination<TData>({
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {[20, 50, 100, 200].map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>

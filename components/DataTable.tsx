@@ -11,7 +11,6 @@ import {
   useReactTable,
   getPaginationRowModel,
   getSortedRowModel,
-  Table as TableType,
 } from "@tanstack/react-table"
 
 import {
@@ -28,17 +27,17 @@ import { DataTablePagination } from "./DataTablePagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  height?: string;
   paginateTag?: string;
   refreshInterval?: number;
-  renderFilter?: (table: TableType<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  height,
   paginateTag,
   refreshInterval,
-  renderFilter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -59,14 +58,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="flex flex-col h-full justify-between gap-sm">
-      <div>
-        {renderFilter && (
-          <div className="flex w-full h-fit gap-sm pb-sm">
-            {renderFilter(table)}
-          </div>
-        )}
-        <div className="flex relative max-h-[70vh] h-fit rounded-md border overflow-auto">
+    <div className={`flex flex-col ${height ? height : "h-full"} justify-between gap-sm`}>
+      <div className="flex flex-col h-[95%] overflow-auto">
+        <div className="flex flex-grow relative rounded-md border overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 bg-card">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -111,7 +105,8 @@ export function DataTable<TData, TValue>({
           </Table>
         </div>
       </div>
-      <div className="border-t-[1px] border-border pt-sm">
+      <hr />
+      <div className="flex h-[5%] pt-sm pb-0.5">
         <DataTablePagination table={table} tag={paginateTag} refreshInterval={refreshInterval} />
       </div>
     </div>

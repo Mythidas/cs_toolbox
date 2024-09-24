@@ -11,7 +11,7 @@ const RootLayout = async ({ children }: Readonly<RootLayoutProps>) => {
   return (
     <main className="flex flex-col size-full">
       <Navbar />
-      <div className="flex size-full p-sm overflow-clip">
+      <div className="flex flex-grow w-full h-[90%] p-sm overflow-clip">
         {children}
       </div>
     </main>
