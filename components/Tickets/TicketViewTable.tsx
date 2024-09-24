@@ -57,7 +57,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
         <DataTableColumnHeader column={column} title="Title" renderFilter={() =>
           <Input
             placeholder="Title..."
-            value={filters.ticketNumber ?? ""}
+            value={filters.title ?? ""}
             onChange={(event) => handleFilterChange("title", event.target.value)}
             className="w-full"
           />
