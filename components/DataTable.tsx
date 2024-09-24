@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
           <Table>
             <TableHeader className="sticky top-0 bg-card">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
+                <TableRow key={headerGroup.id} className="hover:bg-card">
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -105,8 +105,7 @@ export function DataTable<TData, TValue>({
           </Table>
         </div>
       </div>
-      <hr />
-      <div className="flex h-[5%] pt-sm pb-0.5">
+      <div className="flex h-[5%] card p-sm">
         <DataTablePagination table={table} tag={paginateTag} refreshInterval={refreshInterval} />
       </div>
     </div>

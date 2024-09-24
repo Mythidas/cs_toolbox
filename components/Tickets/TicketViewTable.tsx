@@ -435,7 +435,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
 
   return (
     <div className="flex flex-col size-full space-y-2 overflow-hidden">
-      <div className="flex h-[5%] w-full justify-between">
+      <div className="flex w-full justify-between p-sm card">
         <TicketActions />
         <div className="flex space-x-2">
           <Button onClick={handleApplyFilters} disabled={loading}>
@@ -450,8 +450,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
           />
         </div>
       </div>
-      <hr />
-      <DataTable data={info.tickets} columns={columns} height="h-[94%]" paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
+      <DataTable data={info.tickets} columns={columns} height="h-[92%]" paginateTag="Ticket" refreshInterval={60 * 1000 * 10} />
     </div>
   )
 }
