@@ -300,7 +300,7 @@ type AutoTaskFieldValue = {
   isSystem: boolean;
 }
 
-type AutoTaskTicketFetchParams = {
+type TicketParams = {
   completed: boolean;
   ticketNumber?: string;
   title?: string;

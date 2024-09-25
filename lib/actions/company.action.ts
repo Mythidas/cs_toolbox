@@ -26,7 +26,7 @@ export async function getVSASites() {
 export async function getAutoTaskSites() {
   try {
     const client = new AutoTaskClient();
-    const sites = await client.getActiveCompanies();
+    const sites = await client.getCompanies();
     return sites;
   } catch (error) {
     console.error(error);
@@ -48,7 +48,11 @@ export async function getVSASite(siteId: string) {
 export async function getCompanyConfigurations(companyId: number) {
   try {
     const client = new AutoTaskClient();
-    const configurations = await client.getCompanyConfigurations(companyId);
+    const configurations = await client.getCompanyConfigurations({
+      Filter: [
+        { field: "companyID", op: "eq", value: companyId },
+      ],
+    });
     return configurations;
   } catch (error) {
     console.error(error);
@@ -59,7 +63,11 @@ export async function getCompanyConfigurations(companyId: number) {
 export async function getCompanyContacts(companyId: number) {
   try {
     const client = new AutoTaskClient();
-    const contacts = await client.getContacts(companyId);
+    const contacts = await client.getContacts({
+      Filter: [
+        { field: "companyID", op: "eq", value: companyId },
+      ],
+    });
     return contacts;
   } catch (error) {
     console.error(error);

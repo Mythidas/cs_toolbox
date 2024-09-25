@@ -23,7 +23,7 @@ export interface TicketViewProps {
   priorities: AutoTaskFieldValue[];
   resources: AutoTaskResource[];
   locations: AutoTaskCompanyLocation[];
-  params: AutoTaskTicketFetchParams;
+  params: TicketParams;
   views: Option[];
 }
 
@@ -318,7 +318,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
     }
   ];
 
-  const [filters, setFilters] = React.useState<AutoTaskTicketFetchParams>(info.params);
+  const [filters, setFilters] = React.useState<TicketParams>(info.params);
   const [loading, setLoading] = React.useState(false);
 
   const { replace } = useRouter();
@@ -330,7 +330,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
     setFilters(info.params);
   }, [info.params]);
 
-  function handleFilterChange(column: keyof AutoTaskTicketFetchParams, value: string | number | Date | undefined) {
+  function handleFilterChange(column: keyof TicketParams, value: string | number | Date | undefined) {
     if (column === "ticketNumber" || column === "title") {
       if (filters[column] === value) {
         filters[column] = undefined;
@@ -433,15 +433,17 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
     <div className="flex flex-col size-full space-y-2 overflow-hidden">
       <div className="flex w-full justify-between p-sm card">
         <TicketActions />
-        <div className="flex space-x-2">
-          <Button onClick={handleApplyFilters} disabled={loading}>
-            {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
-            Apply Filters
-          </Button>
-          <Button onClick={handleClearFilters} disabled={loading} variant="destructive">
-            {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
-            Clear Filters
-          </Button>
+        <div className="flex space-x-6">
+          <div className="flex space-x-2">
+            <Button onClick={handleApplyFilters} disabled={loading}>
+              {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
+              Apply Filters
+            </Button>
+            <Button onClick={handleClearFilters} disabled={loading} variant="destructive">
+              {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
+              Clear Filters
+            </Button>
+          </div>
           <SelectInput
             defaultValue={info.views.find((view) => view.value === convertFiltersToURLParams(info.params))?.value || undefined}
             options={info.views}

@@ -1,7 +1,7 @@
 import TicketView from "@/components/Tickets/TicketView";
 import TicketViewSkeleton from "@/components/Tickets/TicketViewSkeleton";
-import { getTicketResources } from "@/lib/actions/ticket.action";
 import { getLoggedInUser } from "@/lib/actions/user.action";
+import { AutoTaskClient } from "@/lib/autotask";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -9,9 +9,10 @@ const Tickets = async ({ searchParams }: { searchParams?: { [key: string]: strin
   const loggedInUser = await getLoggedInUser();
   if (!loggedInUser) redirect("/sign-in");
 
-  const resources = await getTicketResources();
 
   if (!searchParams || Object.keys(searchParams).length === 0) {
+    const autotaskClient = new AutoTaskClient();
+    const resources = await autotaskClient.getResources();
     const resourceId = resources.find((resource) => resource.email === loggedInUser?.email)?.id;
 
     if (resourceId) {

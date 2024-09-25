@@ -18,7 +18,7 @@ interface SelectInputProps extends SelectProps {
 function SelectInput({ options, label, ...props }: SelectInputProps) {
   return (
     <Select {...props}>
-      <SelectTrigger className="w-full bg-secondary hover:bg-secondary-foreground dark:hover:text-secondary">
+      <SelectTrigger className="w-full bg-secondary hover:bg-secondary-foreground hover:text-secondary">
         <SelectValue placeholder={`Select ${label}`} />
       </SelectTrigger>
       <SelectContent>

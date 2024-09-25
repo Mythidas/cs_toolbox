@@ -22,7 +22,7 @@ export const AUTOTASK_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/Ti
 export const AUTOTASK_NEW_TICKET_URL = "https://ww15.autotask.net/Mvc/ServiceDesk/TicketNew.mvc/Create?categoryId=3";
 export const AUTOTASK_COMPANY_URL = "https://ww15.autotask.net/Mvc/CRM/AccountDetail.mvc?accountId=";
 
-export function convertFiltersToURLParams(filters: AutoTaskTicketFetchParams): string {
+export function convertFiltersToURLParams(filters: TicketParams): string {
   return Object.entries(filters).reduce((acc, [key, value]) => {
     if (value === null || value === undefined) {
       return acc;
