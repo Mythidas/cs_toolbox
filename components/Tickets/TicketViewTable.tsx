@@ -364,7 +364,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
 
   function handleClearFilters() {
     setFilters({
-      completed: true,
+      completed: false,
       ticketNumber: undefined,
       title: undefined,
       companyID: undefined,
