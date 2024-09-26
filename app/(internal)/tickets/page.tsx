@@ -1,7 +1,6 @@
 import TicketView from "@/components/Tickets/TicketView";
 import TicketViewSkeleton from "@/components/Tickets/TicketViewSkeleton";
 import { getLoggedInUser } from "@/lib/actions/user.action";
-import { AutoTaskClient } from "@/lib/autotask";
 import { redirect } from "next/navigation";
 import React from "react";
 

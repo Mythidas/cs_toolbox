@@ -1,7 +1,7 @@
 import React from "react";
 import TicketViewTable from "./TicketViewTable";
 import { getLoggedInUser } from "@/lib/actions/user.action";
-import { getTicketInfo, getTickets } from "@/lib/actions/ticket.action";
+import { getTicketInfo } from "@/lib/actions/ticket.action";
 
 const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
   const ticketParams: TicketParams = {
