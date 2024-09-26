@@ -23,10 +23,11 @@ interface ComboInputProps {
   options: Option[];
   placeholder?: string;
   defaultValue?: string;
+  disableToggle?: boolean;
   onChange?: (option: Option) => void;
 }
 
-const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInputProps) => {
+const ComboInput = ({ options, placeholder, defaultValue, disableToggle, onChange }: ComboInputProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(defaultValue || "");
 
@@ -60,6 +61,11 @@ const ComboInput = ({ options, placeholder, defaultValue, onChange }: ComboInput
                   key={_option.label}
                   value={_option.label}
                   onSelect={() => {
+                    if (disableToggle && _option.value === value) {
+                      setOpen(false);
+                      return;
+                    }
+
                     setValue(_option.value === value ? "" : _option.value);
                     setOpen(false);
                     onChange?.(_option);

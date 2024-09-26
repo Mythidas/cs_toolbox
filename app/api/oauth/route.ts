@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       await createUserDocument(session.userId);
     }
 
-    return NextResponse.redirect(`${NEXT_PUBLIC_ORIGIN}?auth_hint=${session.secret}`,);
+    return NextResponse.redirect(`${NEXT_PUBLIC_ORIGIN}?auth_hint=${session.secret}`);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });

@@ -444,14 +444,14 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
               Clear Filters
             </Button>
           </div>
-          <SelectInput
+          <ComboInput
             defaultValue={info.views.find((view) => view.value === convertFiltersToURLParams(info.params))?.value || undefined}
             options={info.views}
-            onValueChange={(value: string) => {
-              const option = info.views.find((view) => view.value === value) || { label: "", value };
-              handleViewChange(option);
+            onChange={(value: Option) => {
+              handleViewChange(value);
             }}
-            label="View"
+            placeholder="Select View..."
+            disableToggle
           />
         </div>
       </div>
