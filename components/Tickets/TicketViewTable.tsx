@@ -364,7 +364,6 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
 
   function handleClearFilters() {
     setFilters({
-      completed: false,
       ticketNumber: undefined,
       title: undefined,
       companyID: undefined,
@@ -440,7 +439,6 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
               Apply Filters
             </Button>
             <Button onClick={handleClearFilters} disabled={loading} variant="destructive">
-              {loading && <Loader width={20} height={20} className="mr-2 animate-spin" />}
               Clear Filters
             </Button>
           </div>

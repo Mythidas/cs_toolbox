@@ -287,75 +287,6 @@ export class AutoTaskClient extends BaseClient {
 
   // =============== Helpers ===============
 
-  async getTicketFiltersFromParams(params: TicketParams): Promise<AutoTaskAPIFilter<AutoTaskTicket>> {
-    try {
-      const completeStatusID = await this.getTicketFieldValue("status", "Complete");
-      if (!completeStatusID) {
-        this._throw("Complete status not found");
-        return { Filter: [] };
-      }
-
-      const apiFilter: AutoTaskAPIFilter<AutoTaskTicket> = {
-        Filter: [],
-        MaxRecords: 500,
-        IncludeFields: [
-          "id",
-          "ticketNumber",
-          "title",
-          "companyID",
-          "queueID",
-          "status",
-          "priority",
-          "assignedResourceID",
-          "lastActivityDate",
-          "companyLocationID"
-        ]
-      };
-
-      if (params.completed) {
-        if (params.status) {
-          apiFilter.Filter.push({ field: "status", op: "in", value: [...params.status, Number(completeStatusID)] });
-        } else {
-          apiFilter.Filter.push({ field: "status", op: "eq", value: Number(completeStatusID) });
-        }
-      } else {
-        if (params.status) {
-          apiFilter.Filter.push({ field: "status", op: "in", value: params.status });
-        } else {
-          apiFilter.Filter.push({ field: "status", op: "noteq", value: Number(completeStatusID) });
-        }
-      }
-
-      for (const [key, value] of Object.entries(params)) {
-        if (key === "completed" || key === "status" || typeof value === "boolean" || !value) {
-          continue;
-        }
-
-        if (key === "lastActivityDate") {
-          const dateValue = (value as Date).toISOString().split('T')[0];
-          const nextDateValue = new Date(dateValue);
-          nextDateValue.setDate(nextDateValue.getDate() + 1);
-          const nextDateString = nextDateValue.toISOString().split('T')[0];
-          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "lt", value: nextDateString });
-          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "gte", value: dateValue });
-          continue;
-        }
-
-        if (key === "ticketNumber" || key === "title") {
-          apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "contains", value: value as string });
-          continue;
-        }
-
-        apiFilter.Filter.push({ field: key as keyof AutoTaskTicket, op: "in", value: value as number[] });
-      }
-
-      return apiFilter;
-    } catch (error) {
-      console.log(error);
-      return { Filter: [] };
-    }
-  }
-
   async getCompanyFieldValue(field: string, label: string) {
     try {
       const companyInfoFetch = await fetch(`${NEXT_PUBLIC_AUTOTASK_URL}/Companies/entityInformation/fields`, {
@@ -384,7 +315,7 @@ export class AutoTaskClient extends BaseClient {
   }
 }
 
-interface AutoTaskAPIFilter<T> {
+export interface AutoTaskAPIFilter<T> {
   Filter: {
     field: keyof T;
     op: "eq" | "noteq" | "gt" | "gte" | "lt" | "lte" | "beginsWith" | "endsWith" | "contains" | "exist" | "notExist" | "in" | "notIn";
