@@ -13,7 +13,6 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { DateInput } from "../DateInput";
 import TicketActions from "./TicketActions";
-import SelectInput from "../SelectInput";
 
 export interface TicketViewProps {
   tickets: AutoTaskTicket[];
