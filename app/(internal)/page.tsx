@@ -1,12 +1,7 @@
-import { getLoggedInUser } from "@/lib/actions/user.action";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import React from "react";
 
-const Home = async ({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) => {
-  const loggedInUser = await getLoggedInUser(searchParams?.auth_hint as string);
-  if (!loggedInUser) redirect("/sign-in");
-
+const Home = async () => {
   return (
     <div className="flex size-full justify-center items-center">
       <div className="flex flex-col p-lg card">

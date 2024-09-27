@@ -20,7 +20,7 @@ const TicketView = async ({ searchParams }: { searchParams?: { [key: string]: st
 
   const ticketInfo = await getTicketInfo(ticketParams);
 
-  const resourceId = ticketInfo.resources.find((resource) => resource.email === loggedInUser?.email)?.id || 0;
+  const resourceId = ticketInfo.resources.find((resource) => resource.email === loggedInUser?.user?.email)?.id || 0;
   const ticketViews = [{ label: "My Tickets", value: `?assignedResourceID=${resourceId}` }];
 
   return (

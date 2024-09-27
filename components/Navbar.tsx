@@ -22,7 +22,7 @@ const Navbar = async () => {
       </div>
       <div className="px-sm">
         <h1 className="font-semibold text-primary">
-          {loggedInUser?.name}
+          {loggedInUser?.user?.name}
         </h1>
       </div>
     </NavigationMenu>
