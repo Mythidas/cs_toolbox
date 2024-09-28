@@ -48,9 +48,9 @@ class VSAXClient extends BaseClient {
     }
   }
 
-  async getSite(siteId: string): Promise<VSAXSite | null> {
+  async getSite(autoTaskSiteID: number): Promise<VSAXSite | null> {
     try {
-      const siteFetch = await fetch(`${NEXT_PUBLIC_VSAX_URL}/sites/${siteId}`, {
+      const siteFetch = await fetch(`${NEXT_PUBLIC_VSAX_URL}/sites?$filter=PsaMappingId eq ${autoTaskSiteID}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -62,14 +62,10 @@ class VSAXClient extends BaseClient {
         this._throw(siteFetch.statusText);
       }
 
-      const site = await siteFetch.json() as { Data: VSAXSite };
-      const sophosTenantId = await this.getSiteSophosTenantId(siteId);
+      const site = await siteFetch.json() as { Data: VSAXSite[] };
+      const sophosTenantId = await this.getSiteSophosTenantId(site.Data[0].Id.toString());
 
-      if (!sophosTenantId) {
-        this._throw("Failed to get Sophos Tenant ID");
-      }
-
-      return { ...site.Data, sophosTenantId: sophosTenantId || undefined };
+      return { ...site.Data[0], sophosTenantId: sophosTenantId || undefined };
     } catch (error) {
       this._throw(error);
       return null;
@@ -90,7 +86,7 @@ class VSAXClient extends BaseClient {
         this._throw(deviceFetch.statusText);
       }
 
-      const devices = await deviceFetch.json() as { Data: unknown[] };
+      const devices = await deviceFetch.json() as { Data: VSAXDevice[] };
       return devices.Data;
     } catch (error) {
       console.error(error);

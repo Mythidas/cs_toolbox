@@ -27,10 +27,10 @@ export async function getAutoTaskSites() {
   }
 }
 
-export async function getVSASite(siteId: string) {
+export async function getVSASite(autoTaskSiteID: number) {
   try {
     const client = new VSAXClient();
-    const site = await client.getSite(siteId);
+    const site = await client.getSite(autoTaskSiteID);
     return site;
   } catch (error) {
     console.error(error);

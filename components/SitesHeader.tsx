@@ -23,7 +23,7 @@ const SitesHeader = ({ sites, currentSite, path }: SitesHeaderParams) => {
   }
 
   return (
-    <div className="flex w-full p-sm justify-between bg-card">
+    <div className="flex w-full justify-between p-sm card">
       <div className="w-fit">
         <ComboInput
           options={sites.map(site => ({ label: site.companyName, value: site.id.toString() }))}

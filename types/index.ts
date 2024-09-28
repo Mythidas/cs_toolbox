@@ -333,6 +333,40 @@ type VSAXSite = {
   sophosTenantId?: string;
 }
 
+type VSAXDevice = {
+  Identifier: string;
+  Name: string;
+  GroupName: string;
+  Description: string;
+  Tags: string[];
+  Type: string;
+  ClientVersion: string;
+  LastSeenOnline: string;
+  ExternalUrl: string;
+  CpuUsage: number;
+  MemoryUsage: number;
+  MemoryTotal: number;
+  FirewallEnabled: boolean;
+  AntivirusEnabled: string;
+  AntivirusUpToDate: string;
+  UacEnabled: boolean;
+  EventLogs: any;
+  Updates: {
+    Critical: number;
+    Important: number;
+    Unspecified: number;
+  };
+  AssetInfo: any[];
+  PublicIpAddress: string;
+  IpAddresses: any[];
+  Disks: any[];
+  InstalledSoftware: any[];
+  ComputerId: number;
+  OrganizationId: number;
+  SiteId: number;
+  LocalIpAddresses: any[];
+}
+
 // =============== Sophos ===============
 
 type SophosDevice = {

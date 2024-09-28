@@ -1,6 +1,5 @@
 import SitesHeader from "@/components/SitesHeader";
 import CompanyTicketView from "@/components/Tickets/CompanyTicketView";
-import TicketView from "@/components/Tickets/TicketView";
 import TicketViewSkeleton from "@/components/Tickets/TicketViewSkeleton";
 import { convertFiltersToURLParams, convertSearchParamsToFilters } from "@/constants";
 import { getAutoTaskSites } from "@/lib/actions/company.action";

@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   height?: string;
   paginateTag?: string;
   refreshInterval?: number;
+  hidePageInfo?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   height,
   paginateTag,
   refreshInterval,
+  hidePageInfo
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -107,7 +109,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="flex h-[5%] card p-sm">
-        <DataTablePagination table={table} tag={paginateTag} refreshInterval={refreshInterval} />
+        <DataTablePagination table={table} tag={paginateTag} refreshInterval={refreshInterval} hidePageInfo={hidePageInfo} />
       </div>
     </div>
   )
