@@ -9,12 +9,10 @@ const Tickets = async ({ searchParams }: { searchParams?: { [key: string]: strin
   if (!loggedInUser) redirect("/sign-in");
 
   return (
-    <div className="flex size-full justify-between space-x-2">
-      <div className="flex flex-col w-full h-full p-sm">
-        <React.Suspense fallback={<TicketViewSkeleton />}>
-          <TicketView searchParams={searchParams} />
-        </React.Suspense>
-      </div>
+    <div className="flex w-full h-full p-sm">
+      <React.Suspense fallback={<TicketViewSkeleton />}>
+        <TicketView searchParams={searchParams} />
+      </React.Suspense>
     </div>
   )
 }

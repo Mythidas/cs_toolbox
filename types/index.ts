@@ -3,6 +3,15 @@ type Option = {
   value: string;
 };
 
+type URLParams = {
+  params: {
+    [key: string]: string;
+  };
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
+};
+
 // =============== DATABASE ===============
 type UserDocument = {
   userId: string;

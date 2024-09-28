@@ -9,11 +9,11 @@ export const NAV_LINKS = [
     title: "Tickets",
     icon: "/icons/ticket.svg",
   },
-  // {
-  //   route: "/devices",
-  //   title: "Devices",
-  //   icon: "/icons/desktop.svg",
-  // },
+  {
+    route: "/sites",
+    title: "Sites",
+    icon: "/icons/office.svg",
+  },
 ];
 
 // =================== AUTOTASK =========================
@@ -38,6 +38,19 @@ export function convertFiltersToURLParams(filters: TicketParams): string {
 
     return `${acc}${key}=${value}&`;
   }, "?").slice(0, -1);
+}
+
+export function convertSearchParamsToFilters(searchParams?: { [key: string]: string | string[] | undefined }) {
+  return {
+    ticketNumber: searchParams?.ticketNumber ? String(searchParams?.ticketNumber) : undefined,
+    title: searchParams?.title ? String(searchParams?.title) : undefined,
+    status: searchParams?.status ? (Array.isArray(searchParams.status) ? searchParams.status.map((_val) => Number(_val)) : [Number(searchParams.status)]) : undefined,
+    companyID: searchParams?.companyID ? (Array.isArray(searchParams.companyID) ? searchParams.companyID.map((_val) => Number(_val)) : [Number(searchParams.companyID)]) : undefined,
+    queueID: searchParams?.queueID ? (Array.isArray(searchParams.queueID) ? searchParams.queueID.map((_val) => Number(_val)) : [Number(searchParams.queueID)]) : undefined,
+    assignedResourceID: searchParams?.assignedResourceID ? (Array.isArray(searchParams.assignedResourceID) ? searchParams.assignedResourceID.map((_val) => Number(_val)) : [Number(searchParams.assignedResourceID)]) : undefined,
+    priority: searchParams?.priority ? (Array.isArray(searchParams.priority) ? searchParams.priority.map((_val) => Number(_val)) : [Number(searchParams.priority)]) : undefined,
+    lastActivityDate: searchParams?.lastActivityDate ? new Date(searchParams.lastActivityDate as string) : undefined,
+  };
 }
 
 // =================== MISC =========================
