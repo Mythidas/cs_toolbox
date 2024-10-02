@@ -51,7 +51,7 @@ export function DataTablePagination<TData>({
   }, [refreshTimerCount])
 
   return (
-    <div className="flex w-full items-centerjustify-between">
+    <div className="flex w-full items-center justify-between">
       <div className="flex text-sm text-muted-foreground text-nowrap space-x-6">
         <span>{table.getFilteredRowModel().rows.length} {tag || "row"}(s)</span>
         {refreshInterval && refreshTimerCount ? (
