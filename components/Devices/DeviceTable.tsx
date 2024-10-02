@@ -55,7 +55,7 @@ const DeviceTable = ({ devices }: DeviceTableVSAProps) => {
       cell: ({ row }) => {
         return (
           <div>
-            {row.original.vsax?.LastSeenOnline ? getTimeSinceDate(row.original.vsax.LastSeenOnline) : <span className="text-destructive">Not Found</span>}
+            {row.original.vsax?.LastSeenOnline ? getTimeSinceDate(row.original.vsax.LastSeenOnline) : !row.original.vsax ? <span className="text-destructive">Not Found</span> : "Unknown"}
           </div>
         )
       },
@@ -73,7 +73,7 @@ const DeviceTable = ({ devices }: DeviceTableVSAProps) => {
       cell: ({ row }) => {
         return (
           <div>
-            {row.original.sophos?.lastSeenAt ? getTimeSinceDate(row.original.sophos.lastSeenAt) : <span className="text-destructive">Not Found</span>}
+            {row.original.sophos?.lastSeenAt ? getTimeSinceDate(row.original.sophos.lastSeenAt) : !row.original.sophos ? <span className="text-destructive">Not Found</span> : "Unknown"}
           </div>
         )
       },

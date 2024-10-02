@@ -20,7 +20,7 @@ export async function getAutoTaskSites() {
   try {
     const client = new AutoTaskClient();
     const sites = await client.getCompanies();
-    return sites;
+    return sites.sort((a, b) => a.companyName.localeCompare(b.companyName));
   } catch (error) {
     console.error(error);
     return [];
