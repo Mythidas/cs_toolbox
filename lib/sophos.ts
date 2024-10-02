@@ -56,6 +56,7 @@ export class SophosClient extends BaseClient {
           Authorization: `Bearer ${bearerToken}`,
           "X-Tenant-ID": siteId,
         },
+        cache: "no-cache",
       });
 
       if (!deviceFetch.ok) {
@@ -63,7 +64,7 @@ export class SophosClient extends BaseClient {
       }
 
       const { items } = await deviceFetch.json() as { items: SophosDevice[] };
-      return items;
+      return items.sort((a, b) => a.hostname.localeCompare(b.hostname));
     } catch (error) {
       console.error(error);
       return [];
@@ -83,6 +84,7 @@ export class SophosClient extends BaseClient {
           client_secret: NEXT_SOPHOS_SECRET!,
           scope: "token",
         }),
+        cache: "no-cache",
       });
 
       if (!response.ok) {
@@ -104,6 +106,7 @@ export class SophosClient extends BaseClient {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
+        cache: "no-cache",
       });
 
       if (!partnerIdFetch.ok) {

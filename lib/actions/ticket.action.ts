@@ -1,6 +1,6 @@
 import { AutoTaskAPIFilter, AutoTaskClient } from "../autotask";
 
-export async function getTickets(params: TicketParams, includeCompleted: boolean = false): Promise<AutoTaskTicket[]> {
+export async function getTickets(params: TicketParams): Promise<AutoTaskTicket[]> {
   try {
     const autotaskClient = new AutoTaskClient();
 
@@ -22,12 +22,15 @@ export async function getTickets(params: TicketParams, includeCompleted: boolean
         "priority",
         "assignedResourceID",
         "lastActivityDate",
-        "companyLocationID"
+        "companyLocationID",
+        "createDate"
       ]
     };
 
-    if (includeCompleted) {
-      apiFilter.Filter.push({ field: "status", op: "in", value: [...params?.status || [], Number(completeStatusID)] });
+    if (params.includeCompleted) {
+      if (params.status) {
+        apiFilter.Filter.push({ field: "status", op: "in", value: [...params?.status || []] });
+      }
     } else {
       if (params.status) {
         apiFilter.Filter.push({ field: "status", op: "in", value: [...params?.status || []] });
@@ -66,10 +69,10 @@ export async function getTickets(params: TicketParams, includeCompleted: boolean
   }
 }
 
-export async function getTicketInfo(params: TicketParams, includeCompleted: boolean = false) {
+export async function getTicketInfo(params: TicketParams) {
   try {
     const autotaskClient = new AutoTaskClient();
-    const tickets = await getTickets(params, includeCompleted);
+    const tickets = await getTickets(params);
     const locations = await autotaskClient.getCompanyLocations({ Filter: [{ field: "companyID", op: "in", value: tickets.map((ticket) => ticket.companyID) }] });
     const resources = await autotaskClient.getResources();
     const companies = await autotaskClient.getCompanies();

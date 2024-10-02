@@ -87,7 +87,7 @@ class VSAXClient extends BaseClient {
       }
 
       const devices = await deviceFetch.json() as { Data: VSAXDevice[] };
-      return devices.Data;
+      return devices.Data.sort((a, b) => a.Name.localeCompare(b.Name));
     } catch (error) {
       console.error(error);
       return [];

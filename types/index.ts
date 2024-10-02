@@ -310,6 +310,7 @@ type AutoTaskFieldValue = {
 }
 
 type TicketParams = {
+  includeCompleted?: boolean;
   ticketNumber?: string;
   title?: string;
   companyID?: number[];
@@ -364,7 +365,16 @@ type VSAXDevice = {
   ComputerId: number;
   OrganizationId: number;
   SiteId: number;
-  LocalIpAddresses: any[];
+  LocalIpAddresses: {
+    Name: string;
+    PhysicalAddress: string;
+    DhcpEnabled: boolean;
+    Gateways: string[];
+    DnsServers: string[];
+    SubnetMask: string;
+    IpV4: string;
+    IpV6: string;
+  }[];
 }
 
 // =============== Sophos ===============

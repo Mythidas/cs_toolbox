@@ -9,6 +9,7 @@ interface CompanyTicketViewProps extends URLParams {
 
 const CompanyTicketView = async ({ searchParams, company }: CompanyTicketViewProps) => {
   const ticketParams: TicketParams = {
+    includeCompleted: true,
     ticketNumber: searchParams?.ticketNumber ? String(searchParams?.ticketNumber) : undefined,
     title: searchParams?.title ? String(searchParams?.title) : undefined,
     status: searchParams?.status ? (Array.isArray(searchParams.status) ? searchParams.status.map((_val) => Number(_val)) : [Number(searchParams.status)]) : undefined,
@@ -29,7 +30,7 @@ const CompanyTicketView = async ({ searchParams, company }: CompanyTicketViewPro
   const ticketViews = [{ label: "My Tickets", value: `?assignedResourceID=${resourceId}` }];
 
   return (
-    <div className="flex flex-col size-full">
+    <div className="flex flex-col h-[95%] size-full">
       <TicketViewTable info={{ ...ticketInfo, params: ticketParams, views: ticketViews }} />
     </div>
   )
