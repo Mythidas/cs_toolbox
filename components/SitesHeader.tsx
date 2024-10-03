@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import ComboCommandInput from "./ComboCommandInput";
+import { AUTOTASK_COMPANY_URL } from "@/constants";
 
 interface SitesHeaderParams {
   sites: AutoTaskCompany[];
@@ -22,15 +24,26 @@ const SitesHeader = ({ sites, currentSite, path }: SitesHeaderParams) => {
     router.replace(`/sites/${option.value}${path ? `/${path}` : ""}`);
   }
 
+  function handleOpenSite(option: Option) {
+    if (option.value === "autotask") {
+      window.open(`${AUTOTASK_COMPANY_URL}${currentSite?.id}`, "_blank");
+    }
+  }
+
   return (
     <div className="flex w-full justify-between p-sm card">
-      <div className="w-fit">
+      <div className="flex w-fit space-x-2">
         <ComboInput
           options={sites.map(site => ({ label: site.companyName, value: site.id.toString() }))}
           placeholder="Search Sites..."
           onChange={handleSelectSite}
           defaultValue={sites.find((site) => site.id === currentSite?.id)?.id.toString()}
           disableToggle
+        />
+        <ComboCommandInput
+          options={[{ label: "AutoTask", value: "autotask" }]}
+          placeholder="Open Site"
+          onChange={handleOpenSite}
         />
       </div>
       {pathname.split("/").pop() !== "sites" && (

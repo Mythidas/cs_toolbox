@@ -4,7 +4,7 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/DataTable";
 import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
-import { AUTOTASK_COMPANY_URL, AUTOTASK_TICKET_URL, convertFiltersToURLParams, TIMEZONES } from "@/constants";
+import { AUTOTASK_TICKET_URL, convertFiltersToURLParams, TIMEZONES } from "@/constants";
 import { Link, Loader } from "lucide-react";
 import ComboInput from "../ComboInput";
 import { useRouter } from "next/navigation";
@@ -90,7 +90,7 @@ const TicketViewTable = ({ info }: { info: TicketViewProps }) => {
       ),
       cell: ({ row }) => {
         return (
-          <a href={`${AUTOTASK_COMPANY_URL}${row.original.companyID}`} target="_blank" rel="noreferrer" className="min-w-32 line-clamp-2 text-primary hover:text-secondary-foreground dark:hover:text-primary-foreground">
+          <a href={`/sites/${row.original.companyID}`} target="_blank" rel="noreferrer" className="min-w-32 line-clamp-2 text-primary hover:text-secondary-foreground dark:hover:text-primary-foreground">
             <p>{info.companies.find((company) => company.id === row.original.companyID)?.companyName}</p>
           </a>
         )

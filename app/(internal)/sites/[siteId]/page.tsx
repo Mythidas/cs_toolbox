@@ -15,8 +15,8 @@ const SiteDashboard = async ({ params }: URLParams) => {
   return (
     <div className="flex flex-col w-full h-full p-sm space-y-2">
       <SitesHeader sites={sites} currentSite={currentSite} />
-      <div className="flex-center size-full bg-card p-sm">
-        <div className="flex p-md border-border border-[1px]">
+      <div className="flex flex-col size-full space-y-2">
+        <div className="flex p-sm card">
           <span>
             Please visit <Link href={`/sites/${currentSite.id}/tickets`} className="text-primary">Tickets</Link> and <Link href={`/sites/${currentSite.id}/devices`} className="text-primary">Devices</Link>
           </span>
